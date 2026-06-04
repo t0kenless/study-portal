@@ -131,7 +131,7 @@ select{font-family:'DM Sans',sans-serif}
   <div id="sidebar">
     <div class="sb-header">
       <div class="sb-logo">📚 StudyPortal</div>
-      <div class="sb-sub">Nandini Garg · Grade 9</div>
+      <div class="sb-sub">Nandini Garg  -  Grade 9</div>
       <div class="sb-streak">
         <span>🔥</span>
         <span style="font-size:12px;color:rgba(255,255,255,0.7)">Streak</span>
@@ -190,7 +190,7 @@ function setSyncStatus(status) {
   const txt = document.getElementById('syncText');
   if (!dot || !txt) return;
   dot.className = 'sync-dot' + (status === 'syncing' ? ' syncing' : status === 'error' ? ' error' : '');
-  txt.textContent = status === 'syncing' ? 'Syncing…' : status === 'error' ? 'Sync error' : 'Synced';
+  txt.textContent = status === 'syncing' ? 'Syncing...' : status === 'error' ? 'Sync error' : 'Synced';
 }
 
 async function sbGet(table, match) {
@@ -343,7 +343,7 @@ function updateStreak() {
 }
 
 // ═══════════════════════════════════════════
-// CURRICULUM DATA — Texas TEKS Grade 9
+// CURRICULUM DATA -- Texas TEKS Grade 9
 // ═══════════════════════════════════════════
 const SUBJECTS = [
   {
@@ -357,9 +357,9 @@ const SUBJECTS = [
       {id:'e5',name:'Speaking, Listening & Media',topics:['Oral presentation skills','Active listening strategies','Media literacy & evaluation','Debate & discussion skills']}
     ],
     resources:[
-      {name:'CommonLit — Grade 9 ELA',type:'Reading platform',url:'https://www.commonlit.org',icon:'📄'},
-      {name:'Purdue OWL — MLA Guide',type:'Reference',url:'https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_general_format.html',icon:'📝'},
-      {name:'Texas Gateway — English I',type:'Lessons',url:'https://www.texasgateway.org/subject/english-i',icon:'🎓'},
+      {name:'CommonLit -- Grade 9 ELA',type:'Reading platform',url:'https://www.commonlit.org',icon:'📄'},
+      {name:'Purdue OWL -- MLA Guide',type:'Reference',url:'https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_general_format.html',icon:'📝'},
+      {name:'Texas Gateway -- English I',type:'Lessons',url:'https://www.texasgateway.org/subject/english-i',icon:'🎓'},
       {name:'Crash Course Literature',type:'Video series',url:'https://www.youtube.com/playlist?list=PL8dPuuaLjXtOeEc9ME62zTfqc0h6Pe8vb',icon:'▶️'},
       {name:'IXL Language Arts Grade 9',type:'Practice',url:'https://www.ixl.com/ela/grade-9',icon:'✏️'}
     ]
@@ -376,9 +376,9 @@ const SUBJECTS = [
       {id:'a6',name:'Exponential & Data',topics:['Exponential growth & decay','Scatter plots & correlation','Linear regression','Statistics & box plots']}
     ],
     resources:[
-      {name:'Khan Academy — Algebra I',type:'Interactive course',url:'https://www.khanacademy.org/math/algebra',icon:'🟠'},
+      {name:'Khan Academy -- Algebra I',type:'Interactive course',url:'https://www.khanacademy.org/math/algebra',icon:'🟠'},
       {name:'Desmos Graphing Calculator',type:'Tool',url:'https://www.desmos.com/calculator',icon:'📊'},
-      {name:'Texas Gateway — Algebra I',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/algebra-i',icon:'🎓'},
+      {name:'Texas Gateway -- Algebra I',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/algebra-i',icon:'🎓'},
       {name:'IXL Algebra I',type:'Practice',url:'https://www.ixl.com/math/algebra-1',icon:'✏️'},
       {name:'PurpleMath Algebra',type:'Reference',url:'https://www.purplemath.com',icon:'📐'}
     ]
@@ -395,8 +395,8 @@ const SUBJECTS = [
     ],
     resources:[
       {name:'CK-12 Biology',type:'Free textbook',url:'https://www.ck12.org/student/biology',icon:'📗'},
-      {name:'Khan Academy — Biology',type:'Video + practice',url:'https://www.khanacademy.org/science/ap-biology',icon:'🟠'},
-      {name:'Texas Gateway — Biology',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/biology',icon:'🎓'},
+      {name:'Khan Academy -- Biology',type:'Video + practice',url:'https://www.khanacademy.org/science/ap-biology',icon:'🟠'},
+      {name:'Texas Gateway -- Biology',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/biology',icon:'🎓'},
       {name:'Amoeba Sisters Biology',type:'YouTube',url:'https://www.youtube.com/@AmoebaSisters',icon:'▶️'},
       {name:'Biology Corner Worksheets',type:'Practice worksheets',url:'https://biologycorner.com',icon:'✏️'}
     ]
@@ -413,9 +413,9 @@ const SUBJECTS = [
     ],
     resources:[
       {name:'National Geographic Education',type:'Maps & lessons',url:'https://education.nationalgeographic.org',icon:'🗺️'},
-      {name:'Texas Gateway — World Geography',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/world-geography',icon:'🎓'},
+      {name:'Texas Gateway -- World Geography',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/world-geography',icon:'🎓'},
       {name:'GeoGuessr (free)',type:'Practice',url:'https://www.geoguessr.com',icon:'🌐'},
-      {name:'Khan Academy — AP Human Geography',type:'Videos',url:'https://www.khanacademy.org/humanities/ap-human-geography',icon:'🟠'},
+      {name:'Khan Academy -- AP Human Geography',type:'Videos',url:'https://www.khanacademy.org/humanities/ap-human-geography',icon:'🟠'},
       {name:'World Atlas',type:'Reference',url:'https://www.worldatlas.com',icon:'📚'}
     ]
   },
@@ -434,17 +434,17 @@ const SUBJECTS = [
       {id:'ga8',name:'Geo A - Trig Ratios & Special Right Triangles',topics:['Sine, cosine, tangent ratios','Inverse trig functions','45-45-90 triangle relationships','30-60-90 triangle relationships']},
       {id:'gb1',name:'Geo B - Real-world Problem Solving',topics:['Multi-step geometric word problems','Applying area & volume to real contexts','Dimensional analysis','Unit conversion in geometric problems']},
       {id:'gb2',name:'Geo B - Transformations & Symmetries',topics:['Reflections, rotations, translations','Compositions of transformations','Line symmetry & rotational symmetry','Transformations on coordinate plane']},
-      {id:'gb3',name:'Geo B - Cross Sections & 3D Figures',topics:['Cross sections of prisms, pyramids, cylinders, cones','Nets of 3D figures','Euler's formula (V - E + F = 2)','Identifying 3D figures from 2D views']},
+      {id:'gb3',name:'Geo B - Cross Sections & 3D Figures',topics:['Cross sections of prisms, pyramids, cylinders, cones','Nets of 3D figures','Euler\'s formula (V - E + F = 2)','Identifying 3D figures from 2D views']},
       {id:'gb4',name:'Geo B - Area & Volume',topics:['Area of polygons & composite figures','Surface area of 3D solids','Volume of prisms, pyramids, cylinders, cones, spheres','Effect of dimension changes on area & volume']},
       {id:'gb5',name:'Geo B - Circles',topics:['Central angles, inscribed angles, arc length','Chord, secant, tangent relationships','Equation of a circle','Sector area & arc length formulas']},
       {id:'gb6',name:'Geo B - Probability',topics:['Sample spaces & theoretical probability','Permutations & combinations','Conditional probability','Independent vs dependent events','Two-way frequency tables']}
     ],
     resources:[
-      {name:'Khan Academy — Geometry',type:'Full course',url:'https://www.khanacademy.org/math/geometry',icon:'🟠'},
+      {name:'Khan Academy -- Geometry',type:'Full course',url:'https://www.khanacademy.org/math/geometry',icon:'🟠'},
       {name:'Desmos Geometry Tool',type:'Interactive',url:'https://www.desmos.com/geometry',icon:'📊'},
       {name:'UTHS Geometry A Study Guide',type:'Official PDF',url:'https://utexas.app.box.com/v/uths-geom-A',icon:'📄'},
       {name:'UTHS Geometry B Study Guide',type:'Official PDF',url:'https://utexas.app.box.com/v/uths-geom-B',icon:'📄'},
-      {name:'Texas Gateway — Geometry',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/geometry',icon:'🎓'},
+      {name:'Texas Gateway -- Geometry',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/geometry',icon:'🎓'},
       {name:'GeoGebra',type:'Interactive geometry',url:'https://www.geogebra.org',icon:'📐'},
       {name:'IXL Geometry',type:'Practice',url:'https://www.ixl.com/math/geometry',icon:'✏️'}
     ]
@@ -496,7 +496,7 @@ const BASE_QUESTIONS = {
     {q:'What process do plants use to convert sunlight into chemical energy?',opts:['Cellular respiration','Fermentation','Photosynthesis','Osmosis'],ans:2,exp:'Photosynthesis uses sunlight, CO₂ and water to produce glucose and oxygen in chloroplasts.'},
     {q:'Which nitrogen base pairs with Adenine in DNA?',opts:['Guanine','Cytosine','Thymine','Uracil'],ans:2,exp:'In DNA, Adenine (A) pairs with Thymine (T).'},
     {q:'What is the correct sequence of mitosis phases?',opts:['Interphase → Anaphase → Metaphase → Prophase','Prophase → Metaphase → Anaphase → Telophase → Cytokinesis','Metaphase → Prophase → Anaphase → Cytokinesis','Telophase → Anaphase → Metaphase → Prophase'],ans:1,exp:'PMAT: Prophase, Metaphase, Anaphase, Telophase, then Cytokinesis.'},
-    {q:'According to Darwin, what drives natural selection?',opts:['Random mutations only','Survival of the fittest based on heritable traits','Intentional adaptation by organisms','Geographic isolation alone'],ans:1,exp:'Natural selection acts on heritable variation — better-adapted individuals survive and reproduce more.'}
+    {q:'According to Darwin, what drives natural selection?',opts:['Random mutations only','Survival of the fittest based on heritable traits','Intentional adaptation by organisms','Geographic isolation alone'],ans:1,exp:'Natural selection acts on heritable variation -- better-adapted individuals survive and reproduce more.'}
   ],
   worldgeo:[
     {q:'Which map projection preserves shape but distorts size near the poles?',opts:['Peters projection','Robinson projection','Mercator projection','Goode\'s homolosine projection'],ans:2,exp:'The Mercator projection is conformal but greatly exaggerates landmasses near the poles.'},
@@ -518,7 +518,7 @@ const BASE_QUESTIONS = {
     {q:'Which postulate proves triangles similar if two pairs of corresponding angles are congruent?',opts:['SSS','SAS','AA','ASA'],ans:2,exp:'The AA (Angle-Angle) similarity postulate: if two angles of one triangle equal two angles of another, the triangles are similar.'}
   ],
   health:[
-    {q:'What does the FITT principle stand for?',opts:['Frequency, Intensity, Time, Type','Fitness, Interval, Training, Technique','Force, Impact, Tension, Tone','Flexibility, Interval, Tempo, Training'],ans:0,exp:'FITT = Frequency, Intensity, Time, Type — the four variables of an exercise program.'},
+    {q:'What does the FITT principle stand for?',opts:['Frequency, Intensity, Time, Type','Fitness, Interval, Training, Technique','Force, Impact, Tension, Tone','Flexibility, Interval, Tempo, Training'],ans:0,exp:'FITT = Frequency, Intensity, Time, Type -- the four variables of an exercise program.'},
     {q:'Which macronutrient is the body\'s primary energy source?',opts:['Protein','Fat','Carbohydrates','Vitamins'],ans:2,exp:'Carbohydrates are broken down into glucose, the body\'s main fuel source.'}
   ],
   pe:[
@@ -581,7 +581,7 @@ function navigate(page) {
 // ═══════════════════════════════════════════
 function renderPage() {
   if (!state.loaded) {
-    document.getElementById('content').innerHTML = '<div style="text-align:center;padding:60px"><div class="spinner"></div><p class="text-muted mt-16">Loading from Supabase…</p></div>';
+    document.getElementById('content').innerHTML = '<div style="text-align:center;padding:60px"><div class="spinner"></div><p class="text-muted mt-16">Loading from Supabase...</p></div>';
     return;
   }
   const titles = {dashboard:'Dashboard',subjects:'Subjects & Curriculum',resources:'Resources',
@@ -615,11 +615,11 @@ function renderDashboard() {
 
   return `<div style="max-width:900px">
     <h1 class="section-title">Welcome back, Nandini! 👋</h1>
-    <p class="section-sub">Here's your learning snapshot for today · All data synced to Supabase ☁️</p>
+    <p class="section-sub">Here\'s your learning snapshot for today  -  All data synced to Supabase ☁️</p>
     <div class="grid-4 mb-20">
       <div class="stat"><div class="stat-val">${pct}%</div><div class="stat-lbl">Curriculum complete</div></div>
       <div class="stat"><div class="stat-val">${state.xp}</div><div class="stat-lbl">Total XP earned</div></div>
-      <div class="stat"><div class="stat-val">${avgScore>0?avgScore+'%':'—'}</div><div class="stat-lbl">Avg quiz score</div></div>
+      <div class="stat"><div class="stat-val">${avgScore>0?avgScore+'%':'--'}</div><div class="stat-lbl">Avg quiz score</div></div>
       <div class="stat"><div class="stat-val">${state.streak}</div><div class="stat-lbl">Day streak 🔥</div></div>
     </div>
     <div class="grid-2" style="gap:20px">
@@ -643,7 +643,7 @@ function renderDashboard() {
           <div class="flex items-center gap-8 mb-12"><span style="font-size:18px">🔄</span>
             <h3 style="font-size:15px;font-weight:600">Spaced Review Due (${spacedDue.length})</h3></div>
           ${spacedDue.slice(0,3).map(t=>`<div class="topic-item" onclick="startSpacedSession()">
-            <span style="font-size:13px;flex:1">${t.ques.q ? t.ques.q.substring(0,50)+'…' : t.topic}</span>
+            <span style="font-size:13px;flex:1">${t.ques.q ? t.ques.q.substring(0,50)+'...' : t.topic}</span>
             <span class="badge badge-amber">Review due</span>
           </div>`).join('')}
           <button class="btn btn-outline btn-sm mt-12" onclick="navigate('spaced')">See all →</button>
@@ -679,11 +679,11 @@ function renderAdminDashboard(totalTopics,doneTopics,totalRes,doneRes,avgScore,p
   const recent = [...state.quizHistory].reverse().slice(0,5);
   return `<div style="max-width:900px">
     <h1 class="section-title">Admin Overview</h1>
-    <p class="section-sub">Nandini's learning progress · Live from Supabase ☁️</p>
+    <p class="section-sub">Nandini\'s learning progress  -  Live from Supabase ☁️</p>
     <div class="grid-4 mb-20">
       <div class="stat"><div class="stat-val">${pct}%</div><div class="stat-lbl">Curriculum complete</div></div>
       <div class="stat"><div class="stat-val">${state.xp}</div><div class="stat-lbl">XP earned</div></div>
-      <div class="stat"><div class="stat-val">${avgScore>0?avgScore+'%':'—'}</div><div class="stat-lbl">Avg quiz score</div></div>
+      <div class="stat"><div class="stat-val">${avgScore>0?avgScore+'%':'--'}</div><div class="stat-lbl">Avg quiz score</div></div>
       <div class="stat"><div class="stat-val">${state.streak}d</div><div class="stat-lbl">Current streak</div></div>
     </div>
     <div class="grid-2" style="gap:20px">
@@ -695,7 +695,7 @@ function renderAdminDashboard(totalTopics,doneTopics,totalRes,doneRes,avgScore,p
           const sp=st>0?Math.round(sd/st*100):0;
           return `<div class="mb-12"><div class="flex items-center justify-between mb-4">
             <span style="font-size:13px">${s.icon} ${s.name}</span>
-            <span style="font-size:12px;color:var(--muted)">${sd}/${st} · ${sp}%</span>
+            <span style="font-size:12px;color:var(--muted)">${sd}/${st}  -  ${sp}%</span>
           </div><div class="prog-bar"><div class="prog-fill ${sp<40?'prog-fill-amber':''}" style="width:${sp}%"></div></div></div>`;
         }).join('')}
       </div>
@@ -705,7 +705,7 @@ function renderAdminDashboard(totalTopics,doneTopics,totalRes,doneRes,avgScore,p
           ${recent.length===0?'<p class="text-muted text-sm">No quizzes yet.</p>':recent.map(q=>`
             <div class="log-row">
               <div style="flex:1"><div style="font-size:13px;font-weight:500">${q.topic}</div>
-              <div style="font-size:12px;color:var(--muted)">${q.date} · ${q.correct}/${q.total} correct</div></div>
+              <div style="font-size:12px;color:var(--muted)">${q.date}  -  ${q.correct}/${q.total} correct</div></div>
               <span class="badge ${q.pct>=80?'badge-green':q.pct>=60?'badge-amber':'badge-red'}">${q.pct}%</span>
             </div>`).join('')}
         </div>
@@ -726,7 +726,7 @@ function renderSubjects() {
   const sel = state.selectedSubject ? SUBJECTS.find(s=>s.id===state.selectedSubject) : null;
   if (sel) return renderSubjectDetail(sel);
   return `<div style="max-width:900px">
-    <h1 class="section-title">Texas TEKS — Grade 9 Curriculum</h1>
+    <h1 class="section-title">Texas TEKS -- Grade 9 Curriculum</h1>
     <p class="section-sub">Click any subject to explore units, topics and resources</p>
     <div class="grid-2" style="gap:16px">
     ${SUBJECTS.map(s=>{
@@ -763,7 +763,7 @@ function renderSubjectDetail(s) {
       <button class="btn btn-outline btn-sm" onclick="state.selectedSubject=null;renderPage()">← Back</button>
       <div style="width:44px;height:44px;border-radius:10px;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:22px">${s.icon}</div>
       <div><h1 class="section-title" style="margin-bottom:0">${s.name}</h1>
-        <p style="font-size:13px;color:var(--muted)">${s.teks} · ${s.units.reduce((a,u)=>a+u.topics.length,0)} topics</p></div>
+        <p style="font-size:13px;color:var(--muted)">${s.teks}  -  ${s.units.reduce((a,u)=>a+u.topics.length,0)} topics</p></div>
       <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="navigate('generate')">✨ Generate Quiz</button>
     </div>
     <div class="grid-2" style="gap:20px">
@@ -789,7 +789,7 @@ function renderSubjectDetail(s) {
         }).join('')}
       </div>
       <div>
-        <h3 style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">${unit.name} — Topics</h3>
+        <h3 style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">${unit.name} -- Topics</h3>
         ${unit.topics.map(t=>{
           const key=s.id+'_'+t; const done=state.completedTopics[key];
           const scores=state.quizHistory.filter(q=>q.topic===t&&q.sid===s.id);
@@ -839,7 +839,7 @@ function renderResources() {
   const doneRes = Object.values(state.completedResources).filter(Boolean).length;
   return `<div style="max-width:900px">
     <h1 class="section-title">Linked Resources</h1>
-    <p class="section-sub">All learning resources · ${doneRes}/${totalRes} reviewed</p>
+    <p class="section-sub">All learning resources  -  ${doneRes}/${totalRes} reviewed</p>
     ${SUBJECTS.map(s=>`<div class="card mb-16">
       <div class="flex items-center gap-10 mb-14">
         <span style="font-size:22px">${s.icon}</span>
@@ -865,7 +865,7 @@ function renderResources() {
 function renderWorksheets() {
   return `<div style="max-width:900px">
     <h1 class="section-title">Worksheets</h1>
-    <p class="section-sub">Practice quizzes by subject — scores save to Supabase automatically</p>
+    <p class="section-sub">Practice quizzes by subject -- scores save to Supabase automatically</p>
     <div class="grid-2" style="gap:16px">
     ${SUBJECTS.map(s=>{
       const bank=(BASE_QUESTIONS[s.id]||[]);
@@ -878,7 +878,7 @@ function renderWorksheets() {
         <div class="flex items-center gap-12">
           <span style="font-size:28px">${s.icon}</span>
           <div style="flex:1"><div style="font-size:15px;font-weight:600">${s.name}</div>
-          <div style="font-size:12px;color:var(--muted)">${total} questions · ${attempts} attempts</div></div>
+          <div style="font-size:12px;color:var(--muted)">${total} questions  -  ${attempts} attempts</div></div>
           ${avg>0?`<span class="badge ${avg>=80?'badge-green':avg>=60?'badge-amber':'badge-red'}">Avg ${avg}%</span>`:'<span class="badge badge-blue">New</span>'}
         </div>
         <div class="prog-bar mt-10"><div class="prog-fill" style="width:${avg}%"></div></div>
@@ -898,7 +898,7 @@ function renderWorksheets() {
 function renderGenerate() {
   return `<div style="max-width:700px">
     <h1 class="section-title">Generate Quiz with AI</h1>
-    <p class="section-sub">Create custom worksheets powered by Claude AI · Questions save to your question bank</p>
+    <p class="section-sub">Create custom worksheets powered by Claude AI  -  Questions save to your question bank</p>
     <div class="card">
       <div style="margin-bottom:16px">
         <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px">Subject</label>
@@ -906,14 +906,14 @@ function renderGenerate() {
       </div>
       <div style="margin-bottom:16px">
         <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px">Topic / Focus area</label>
-        <input id="genTopic" class="input" placeholder="e.g. Linear equations, Photosynthesis, MLA citations…"/>
+        <input id="genTopic" class="input" placeholder="e.g. Linear equations, Photosynthesis, MLA citations..."/>
       </div>
       <div style="margin-bottom:16px">
         <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px">Difficulty</label>
         <select id="genDiff" class="input">
-          <option value="easy">Easy — foundational recall</option>
-          <option value="medium" selected>Medium — standard Grade 9</option>
-          <option value="hard">Hard — STAAR exam level</option>
+          <option value="easy">Easy -- foundational recall</option>
+          <option value="medium" selected>Medium -- standard Grade 9</option>
+          <option value="hard">Hard -- STAAR exam level</option>
         </select>
       </div>
       <div style="margin-bottom:20px">
@@ -941,7 +941,7 @@ async function generateAIQuiz() {
 
   statusEl.innerHTML = `<div class="card" style="text-align:center;padding:28px">
     <div class="spinner"></div>
-    <p style="color:var(--muted);margin-top:8px;font-size:14px">Generating ${count} ${diff} questions on "${topic}" for ${sub.name}…</p>
+    <p style="color:var(--muted);margin-top:8px;font-size:14px">Generating ${count} ${diff} questions on "${topic}" for ${sub.name}...</p>
   </div>`;
 
   const prompt = `You are a Texas TEKS Grade 9 teacher. Create exactly ${count} multiple-choice questions about "${topic}" for ${sub.name} (${sub.teks}).
@@ -1062,7 +1062,7 @@ async function finishQuiz() {
   state.quizHistory.push(entry);
   awardXP(xpGain);
 
-  // Spaced repetition — schedule wrong answers
+  // Spaced repetition -- schedule wrong answers
   for (const [i, ques] of q.questions.entries()) {
     if (q.answers[i] !== ques.ans) {
       const dueAt = new Date(Date.now() + 86400000 * 2).toISOString();
@@ -1088,7 +1088,7 @@ async function finishQuiz() {
   saveLocal();
 
   const color = pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
-  const msg = pct>=80?'Excellent work! 🎉':pct>=60?'Good effort! Keep practicing 💪':'Keep reviewing — you\'ve got this! 📚';
+  const msg = pct>=80?'Excellent work! 🎉':pct>=60?'Good effort! Keep practicing 💪':'Keep reviewing -- you\'ve got this! 📚';
 
   document.getElementById('modalBody').innerHTML = `
     <div style="text-align:center;padding:20px 0">
@@ -1097,7 +1097,7 @@ async function finishQuiz() {
         <div style="font-size:11px;color:var(--muted)">${correct}/${total}</div>
       </div>
       <h3 style="font-size:18px;margin-bottom:6px">${msg}</h3>
-      <p class="text-muted text-sm">+${xpGain} XP · Saved to Supabase ☁️</p>
+      <p class="text-muted text-sm">+${xpGain} XP  -  Saved to Supabase ☁️</p>
       <div class="flex mt-20" style="justify-content:center;gap:10px">
         <button class="btn btn-outline" onclick="closeModal();renderPage()">Close</button>
         <button class="btn btn-primary" onclick="closeModal();navigate('generate')">✨ Generate more</button>
@@ -1109,7 +1109,7 @@ async function finishQuiz() {
         <div style="padding:12px;border-left:3px solid ${q.answers[i]===ques.ans?'var(--green)':'var(--red)'};
           background:${q.answers[i]===ques.ans?'var(--green-soft)':'var(--red-soft)'};border-radius:0 8px 8px 0;margin-bottom:8px">
           <p style="font-size:13px;font-weight:500">${ques.q}</p>
-          <p style="font-size:12px;color:var(--muted);margin-top:4px">Your answer: ${ques.opts[q.answers[i]]||'—'} ${q.answers[i]===ques.ans?'✓':'✗'}</p>
+          <p style="font-size:12px;color:var(--muted);margin-top:4px">Your answer: ${ques.opts[q.answers[i]]||'--'} ${q.answers[i]===ques.ans?'✓':'✗'}</p>
           ${q.answers[i]!==ques.ans?`<p style="font-size:12px;color:var(--green);margin-top:2px">Correct: ${ques.opts[ques.ans]}</p>`:''}
           <p style="font-size:12px;color:#555;margin-top:4px">${ques.exp}</p>
         </div>`).join('')}
@@ -1141,7 +1141,7 @@ function renderSpaced() {
     ${due.map(d=>`<div class="card card-sm mb-8">
       <span class="badge badge-amber mb-8">Review due</span>
       <p style="font-size:14px">${d.ques.q}</p>
-      <p style="font-size:12px;color:var(--muted);margin-top:4px">${SUBJECTS.find(s=>s.id===d.sid)?.name||d.sid} · ${d.topic}</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:4px">${SUBJECTS.find(s=>s.id===d.sid)?.name||d.sid}  -  ${d.topic}</p>
     </div>`).join('')}`}
   </div>`;
 }
@@ -1159,7 +1159,7 @@ async function startSpacedSession() {
 function renderProgress() {
   return `<div style="max-width:900px">
     <h1 class="section-title">My Progress</h1>
-    <p class="section-sub">Your full learning journey — synced across devices</p>
+    <p class="section-sub">Your full learning journey -- synced across devices</p>
     <div class="grid-4 mb-20">
       <div class="stat"><div class="stat-val">${state.xp}</div><div class="stat-lbl">Total XP</div></div>
       <div class="stat"><div class="stat-val">${state.quizHistory.length}</div><div class="stat-lbl">Quizzes taken</div></div>
@@ -1185,7 +1185,7 @@ function renderProgress() {
           <div><p style="font-size:12px;color:var(--muted);margin-bottom:4px">Quizzes taken</p>
             <p style="font-size:18px;font-weight:600">${qs.length}</p></div>
           <div><p style="font-size:12px;color:var(--muted);margin-bottom:4px">Best score</p>
-            <p style="font-size:18px;font-weight:600;color:var(--green)">${best!==null?best+'%':'—'}</p></div>
+            <p style="font-size:18px;font-weight:600;color:var(--green)">${best!==null?best+'%':'--'}</p></div>
         </div>
         <button class="btn btn-outline btn-sm mt-12" onclick="startSubjectQuiz('${s.id}')">Practice ${s.name} →</button>
       </div>`;
@@ -1200,7 +1200,7 @@ function renderHistory() {
   const hist = [...state.quizHistory].reverse();
   return `<div style="max-width:800px">
     <h1 class="section-title">Quiz History</h1>
-    <p class="section-sub">${hist.length} quizzes recorded · All saved in Supabase</p>
+    <p class="section-sub">${hist.length} quizzes recorded  -  All saved in Supabase</p>
     ${hist.length===0?`<div class="card" style="text-align:center;padding:40px">
       <p style="font-size:36px;margin-bottom:10px">📋</p>
       <p class="text-muted">No quizzes yet. Head to Worksheets to get started!</p>
@@ -1210,7 +1210,7 @@ function renderHistory() {
         return `<div class="log-row">
           <span style="font-size:20px">${sub?.icon||'📝'}</span>
           <div style="flex:1"><div style="font-size:14px;font-weight:500">${q.topic}</div>
-          <div style="font-size:12px;color:var(--muted)">${sub?.name||q.sid} · ${q.correct}/${q.total} correct</div></div>
+          <div style="font-size:12px;color:var(--muted)">${sub?.name||q.sid}  -  ${q.correct}/${q.total} correct</div></div>
           <span class="badge ${q.pct>=80?'badge-green':q.pct>=60?'badge-amber':'badge-red'}">${q.pct}%</span>
           <div style="font-size:12px;color:var(--soft);width:80px;text-align:right">${q.date}</div>
         </div>`;
@@ -1280,7 +1280,7 @@ function renderSettings() {
     <div class="card mb-16">
       <h3 style="font-size:16px;font-weight:600;margin-bottom:12px">🎓 Student Profile</h3>
       <p style="font-size:14px">Name: <strong>Nandini Garg</strong></p>
-      <p style="font-size:14px;margin-top:8px">Grade: <strong>9th Grade — Texas TEKS</strong></p>
+      <p style="font-size:14px;margin-top:8px">Grade: <strong>9th Grade -- Texas TEKS</strong></p>
       <p style="font-size:14px;margin-top:8px">Subjects: <strong>${SUBJECTS.length} subjects</strong></p>
     </div>
     <div class="card">
@@ -1292,7 +1292,7 @@ function renderSettings() {
 }
 
 function resetLocal() {
-  if (confirm('Clear local cache? Supabase data is safe — portal will reload from Supabase.')) {
+  if (confirm('Clear local cache? Supabase data is safe -- portal will reload from Supabase.')) {
     localStorage.removeItem('ng_portal_v3'); location.reload();
   }
 }
