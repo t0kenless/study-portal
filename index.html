@@ -424,20 +424,20 @@ const SUBJECTS = [
     id:'geometry', name:'Geometry', icon:'📐', color:'#fce7f3', iconBg:'#9333ea',
     desc:'Shapes, proofs, trig, transformations & probability', teks:'TEKS Chapter 111.41',
     units:[
-      {id:'ga1',name:'Geo A · Real-world Problem Solving',topics:['Geometric modeling of real-world situations','Using formulas to solve area & perimeter problems','Applying geometric concepts to architecture & design','Coordinate geometry problem solving']},
-      {id:'ga2',name:'Geo A · Coordinate Geometry',topics:['Distance & midpoint formulas','Slope relationships (parallel & perpendicular lines)','Equations of lines & circles on coordinate plane','Partitioning a line segment']},
-      {id:'ga3',name:'Geo A · Logical Argumentation',topics:['Inductive vs deductive reasoning','Conditional statements (if-then, converse, inverse, contrapositive)','Biconditional statements','Counterexamples']},
-      {id:'ga4',name:'Geo A · Patterns, Conjectures & Constructions',topics:['Geometric patterns & sequences','Constructing bisectors & perpendiculars','Constructing congruent segments & angles','Conjectures from patterns']},
-      {id:'ga5',name:'Geo A · Proofs & Congruencies',topics:['Triangle congruence (SSS, SAS, ASA, AAS, HL)','CPCTC (corresponding parts of congruent triangles)','Two-column and paragraph proofs','Properties of isosceles & equilateral triangles']},
-      {id:'ga6',name:'Geo A · Dilations & Similar Triangles',topics:['Dilations on coordinate plane','Scale factor','AA, SSS, SAS similarity postulates','Proportional parts in triangles']},
-      {id:'ga7',name:'Geo A · Similarity Theorem Applications',topics:['Triangle proportionality theorem','Geometric mean in right triangles','Midsegment theorem','Applications of similar figures']},
-      {id:'ga8',name:'Geo A · Trig Ratios & Special Right Triangles',topics:['Sine, cosine, tangent ratios','Inverse trig functions','45-45-90 triangle relationships','30-60-90 triangle relationships']},
-      {id:'gb1',name:'Geo B · Real-world Problem Solving',topics:['Multi-step geometric word problems','Applying area & volume to real contexts','Dimensional analysis','Unit conversion in geometric problems']},
-      {id:'gb2',name:'Geo B · Transformations & Symmetries',topics:['Reflections, rotations, translations','Compositions of transformations','Line symmetry & rotational symmetry','Transformations on coordinate plane']},
-      {id:'gb3',name:'Geo B · Cross Sections & 3D Figures',topics:['Cross sections of prisms, pyramids, cylinders, cones','Nets of 3D figures','Euler's formula (V - E + F = 2)','Identifying 3D figures from 2D views']},
-      {id:'gb4',name:'Geo B · Area & Volume',topics:['Area of polygons & composite figures','Surface area of 3D solids','Volume of prisms, pyramids, cylinders, cones, spheres','Effect of dimension changes on area & volume']},
-      {id:'gb5',name:'Geo B · Circles',topics:['Central angles, inscribed angles, arc length','Chord, secant, tangent relationships','Equation of a circle','Sector area & arc length formulas']},
-      {id:'gb6',name:'Geo B · Probability',topics:['Sample spaces & theoretical probability','Permutations & combinations','Conditional probability','Independent vs dependent events','Two-way frequency tables']}
+      {id:'ga1',name:'Geo A - Real-world Problem Solving',topics:['Geometric modeling of real-world situations','Using formulas to solve area & perimeter problems','Applying geometric concepts to architecture & design','Coordinate geometry problem solving']},
+      {id:'ga2',name:'Geo A - Coordinate Geometry',topics:['Distance & midpoint formulas','Slope relationships (parallel & perpendicular lines)','Equations of lines & circles on coordinate plane','Partitioning a line segment']},
+      {id:'ga3',name:'Geo A - Logical Argumentation',topics:['Inductive vs deductive reasoning','Conditional statements (if-then, converse, inverse, contrapositive)','Biconditional statements','Counterexamples']},
+      {id:'ga4',name:'Geo A - Patterns, Conjectures & Constructions',topics:['Geometric patterns & sequences','Constructing bisectors & perpendiculars','Constructing congruent segments & angles','Conjectures from patterns']},
+      {id:'ga5',name:'Geo A - Proofs & Congruencies',topics:['Triangle congruence (SSS, SAS, ASA, AAS, HL)','CPCTC (corresponding parts of congruent triangles)','Two-column and paragraph proofs','Properties of isosceles & equilateral triangles']},
+      {id:'ga6',name:'Geo A - Dilations & Similar Triangles',topics:['Dilations on coordinate plane','Scale factor','AA, SSS, SAS similarity postulates','Proportional parts in triangles']},
+      {id:'ga7',name:'Geo A - Similarity Theorem Applications',topics:['Triangle proportionality theorem','Geometric mean in right triangles','Midsegment theorem','Applications of similar figures']},
+      {id:'ga8',name:'Geo A - Trig Ratios & Special Right Triangles',topics:['Sine, cosine, tangent ratios','Inverse trig functions','45-45-90 triangle relationships','30-60-90 triangle relationships']},
+      {id:'gb1',name:'Geo B - Real-world Problem Solving',topics:['Multi-step geometric word problems','Applying area & volume to real contexts','Dimensional analysis','Unit conversion in geometric problems']},
+      {id:'gb2',name:'Geo B - Transformations & Symmetries',topics:['Reflections, rotations, translations','Compositions of transformations','Line symmetry & rotational symmetry','Transformations on coordinate plane']},
+      {id:'gb3',name:'Geo B - Cross Sections & 3D Figures',topics:['Cross sections of prisms, pyramids, cylinders, cones','Nets of 3D figures','Euler's formula (V - E + F = 2)','Identifying 3D figures from 2D views']},
+      {id:'gb4',name:'Geo B - Area & Volume',topics:['Area of polygons & composite figures','Surface area of 3D solids','Volume of prisms, pyramids, cylinders, cones, spheres','Effect of dimension changes on area & volume']},
+      {id:'gb5',name:'Geo B - Circles',topics:['Central angles, inscribed angles, arc length','Chord, secant, tangent relationships','Equation of a circle','Sector area & arc length formulas']},
+      {id:'gb6',name:'Geo B - Probability',topics:['Sample spaces & theoretical probability','Permutations & combinations','Conditional probability','Independent vs dependent events','Two-way frequency tables']}
     ],
     resources:[
       {name:'Khan Academy — Geometry',type:'Full course',url:'https://www.khanacademy.org/math/geometry',icon:'🟠'},
@@ -1273,7 +1273,7 @@ function renderSettings() {
     <div class="card mb-16">
       <h3 style="font-size:16px;font-weight:600;margin-bottom:12px">☁️ Supabase Connection</h3>
       <div style="padding:12px;background:var(--green-soft);border-radius:8px;font-size:13px;color:var(--green)">
-        ✓ Connected to Supabase · Project: mhyavhkgsrkfklirjvhg<br/>
+        ✓ Connected to Supabase - Project: mhyavhkgsrkfklirjvhg<br/>
         All progress, quiz scores, and question bank sync automatically across devices.
       </div>
     </div>
