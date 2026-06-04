@@ -419,6 +419,36 @@ const SUBJECTS = [
       {name:'World Atlas',type:'Reference',url:'https://www.worldatlas.com',icon:'📚'}
     ]
   },
+,
+  {
+    id:'geometry', name:'Geometry', icon:'📐', color:'#fce7f3', iconBg:'#9333ea',
+    desc:'Shapes, proofs, trig, transformations & probability', teks:'TEKS Chapter 111.41',
+    units:[
+      {id:'ga1',name:'Geo A · Real-world Problem Solving',topics:['Geometric modeling of real-world situations','Using formulas to solve area & perimeter problems','Applying geometric concepts to architecture & design','Coordinate geometry problem solving']},
+      {id:'ga2',name:'Geo A · Coordinate Geometry',topics:['Distance & midpoint formulas','Slope relationships (parallel & perpendicular lines)','Equations of lines & circles on coordinate plane','Partitioning a line segment']},
+      {id:'ga3',name:'Geo A · Logical Argumentation',topics:['Inductive vs deductive reasoning','Conditional statements (if-then, converse, inverse, contrapositive)','Biconditional statements','Counterexamples']},
+      {id:'ga4',name:'Geo A · Patterns, Conjectures & Constructions',topics:['Geometric patterns & sequences','Constructing bisectors & perpendiculars','Constructing congruent segments & angles','Conjectures from patterns']},
+      {id:'ga5',name:'Geo A · Proofs & Congruencies',topics:['Triangle congruence (SSS, SAS, ASA, AAS, HL)','CPCTC (corresponding parts of congruent triangles)','Two-column and paragraph proofs','Properties of isosceles & equilateral triangles']},
+      {id:'ga6',name:'Geo A · Dilations & Similar Triangles',topics:['Dilations on coordinate plane','Scale factor','AA, SSS, SAS similarity postulates','Proportional parts in triangles']},
+      {id:'ga7',name:'Geo A · Similarity Theorem Applications',topics:['Triangle proportionality theorem','Geometric mean in right triangles','Midsegment theorem','Applications of similar figures']},
+      {id:'ga8',name:'Geo A · Trig Ratios & Special Right Triangles',topics:['Sine, cosine, tangent ratios','Inverse trig functions','45-45-90 triangle relationships','30-60-90 triangle relationships']},
+      {id:'gb1',name:'Geo B · Real-world Problem Solving',topics:['Multi-step geometric word problems','Applying area & volume to real contexts','Dimensional analysis','Unit conversion in geometric problems']},
+      {id:'gb2',name:'Geo B · Transformations & Symmetries',topics:['Reflections, rotations, translations','Compositions of transformations','Line symmetry & rotational symmetry','Transformations on coordinate plane']},
+      {id:'gb3',name:'Geo B · Cross Sections & 3D Figures',topics:['Cross sections of prisms, pyramids, cylinders, cones','Nets of 3D figures','Euler's formula (V - E + F = 2)','Identifying 3D figures from 2D views']},
+      {id:'gb4',name:'Geo B · Area & Volume',topics:['Area of polygons & composite figures','Surface area of 3D solids','Volume of prisms, pyramids, cylinders, cones, spheres','Effect of dimension changes on area & volume']},
+      {id:'gb5',name:'Geo B · Circles',topics:['Central angles, inscribed angles, arc length','Chord, secant, tangent relationships','Equation of a circle','Sector area & arc length formulas']},
+      {id:'gb6',name:'Geo B · Probability',topics:['Sample spaces & theoretical probability','Permutations & combinations','Conditional probability','Independent vs dependent events','Two-way frequency tables']}
+    ],
+    resources:[
+      {name:'Khan Academy — Geometry',type:'Full course',url:'https://www.khanacademy.org/math/geometry',icon:'🟠'},
+      {name:'Desmos Geometry Tool',type:'Interactive',url:'https://www.desmos.com/geometry',icon:'📊'},
+      {name:'UTHS Geometry A Study Guide',type:'Official PDF',url:'https://utexas.app.box.com/v/uths-geom-A',icon:'📄'},
+      {name:'UTHS Geometry B Study Guide',type:'Official PDF',url:'https://utexas.app.box.com/v/uths-geom-B',icon:'📄'},
+      {name:'Texas Gateway — Geometry',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/geometry',icon:'🎓'},
+      {name:'GeoGebra',type:'Interactive geometry',url:'https://www.geogebra.org',icon:'📐'},
+      {name:'IXL Geometry',type:'Practice',url:'https://www.ixl.com/math/geometry',icon:'✏️'}
+    ]
+  },
   {
     id:'health', name:'Health Education', icon:'💪', color:'#fef3c7', iconBg:'#d97706',
     desc:'Physical health, wellness & life skills', teks:'TEKS Chapter 115',
@@ -474,6 +504,18 @@ const BASE_QUESTIONS = {
     {q:'The equator divides the Earth into which two hemispheres?',opts:['Eastern and Western','Arctic and Antarctic','Northern and Southern','Atlantic and Pacific'],ans:2,exp:'The equator (0° latitude) divides Earth into Northern and Southern hemispheres.'},
     {q:'Which economic term describes the total value of goods and services produced by a country in a year?',opts:['CPI','GDP','HDI','PPP'],ans:1,exp:'GDP (Gross Domestic Product) measures total monetary value of all goods and services produced.'},
     {q:'Plate tectonics explains which of the following?',opts:['Ocean tides','Formation of mountains and earthquakes','Atmospheric weather patterns','Seasonal changes'],ans:1,exp:'Plate tectonics describes crustal plate movement, causing earthquakes, volcanoes, and mountains.'}
+  ],
+  geometry:[
+    {q:'In a right triangle, if one leg is 3 and the hypotenuse is 5, what is the other leg?',opts:['2','4','6','8'],ans:1,exp:'Use the Pythagorean theorem: 3² + b² = 5² → 9 + b² = 25 → b² = 16 → b = 4.'},
+    {q:'Two lines are parallel. A transversal crosses them creating alternate interior angles of (3x + 10)° and (5x - 20)°. What is x?',opts:['10','15','20','25'],ans:1,exp:'Alternate interior angles are equal when lines are parallel: 3x + 10 = 5x - 20 → 30 = 2x → x = 15.'},
+    {q:'Which triangle congruence theorem states that if two angles and the included side of one triangle equal those of another, the triangles are congruent?',opts:['SSS','SAS','ASA','AAS'],ans:2,exp:'ASA (Angle-Side-Angle) requires two angles and the included (between them) side to be congruent.'},
+    {q:'A dilation with scale factor 3 is applied to a triangle with area 8 sq units. What is the new area?',opts:['24','48','72','96'],ans:2,exp:'Area scales by the square of the scale factor: 8 × 3² = 8 × 9 = 72 sq units.'},
+    {q:'In a 30-60-90 triangle, if the shorter leg is 5, what is the hypotenuse?',opts:['5√2','10','5√3','10√3'],ans:1,exp:'In a 30-60-90 triangle, hypotenuse = 2 × shorter leg = 2 × 5 = 10.'},
+    {q:'A reflection across the y-axis maps point (3, -2) to which point?',opts:['(-3, 2)','(-3, -2)','(3, 2)','(2, -3)'],ans:1,exp:'Reflection across the y-axis negates the x-coordinate: (3, -2) → (-3, -2).'},
+    {q:'What is the area of a sector with radius 6 and central angle 90°?',opts:['3π','6π','9π','12π'],ans:2,exp:'Area of sector = (θ/360°) × πr² = (90/360) × π(36) = (1/4)(36π) = 9π.'},
+    {q:'An inscribed angle measures 35°. What is the measure of the intercepted arc?',opts:['17.5°','35°','70°','140°'],ans:2,exp:'The inscribed angle theorem states the intercepted arc is twice the inscribed angle: 35° × 2 = 70°.'},
+    {q:'What is the probability of rolling a sum of 7 with two standard dice?',opts:['1/9','1/6','1/12','5/36'],ans:1,exp:'There are 6 ways to roll a sum of 7 out of 36 possible outcomes: 6/36 = 1/6.'},
+    {q:'Which postulate proves triangles similar if two pairs of corresponding angles are congruent?',opts:['SSS','SAS','AA','ASA'],ans:2,exp:'The AA (Angle-Angle) similarity postulate: if two angles of one triangle equal two angles of another, the triangles are similar.'}
   ],
   health:[
     {q:'What does the FITT principle stand for?',opts:['Frequency, Intensity, Time, Type','Fitness, Interval, Training, Technique','Force, Impact, Tension, Tone','Flexibility, Interval, Tempo, Training'],ans:0,exp:'FITT = Frequency, Intensity, Time, Type — the four variables of an exercise program.'},
