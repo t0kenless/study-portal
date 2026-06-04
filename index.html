@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Nandini's Study Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --ink: #1a1a2e; --ink2: #2d2d4a; --muted: #6b6b8a; --soft: #9898b0;
+  --border: rgba(100,100,160,0.15); --border2: rgba(100,100,160,0.28);
+  --bg: #f7f6ff; --surface: #ffffff; --surface2: #f0effe;
+  --accent: #5b4cf5; --accent2: #7c6ff7; --accent-soft: #ede9ff;
+  --green: #16a34a; --green-soft: #dcfce7;
+  --amber: #d97706; --amber-soft: #fef3c7;
+  --red: #dc2626; --red-soft: #fee2e2;
+  --blue: #2563eb; --blue-soft: #dbeafe;
+  --teal: #0d9488; --teal-soft: #ccfbf1;
+  --r: 10px; --r2: 16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+h1,h2,h3{font-family:'Playfair Display',serif}
+#app{display:flex;min-height:100vh}
+#sidebar{width:240px;min-height:100vh;background:var(--ink);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0}
+#main{flex:1;overflow-x:hidden;overflow-y:auto;height:100vh}
+.sb-header{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sb-logo{font-family:'Playfair Display',serif;font-size:18px;color:#fff;font-weight:700;line-height:1.2}
+.sb-sub{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.5px;text-transform:uppercase;margin-top:2px}
+.sb-streak{display:flex;align-items:center;gap:6px;margin-top:12px;background:rgba(255,255,255,0.06);border-radius:8px;padding:8px 10px}
+.sb-streak-num{font-weight:600;color:#fbbf24;font-size:14px}
+.sb-nav{padding:12px 0;flex:1}
+.sb-section{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;padding:12px 20px 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;transition:background 0.15s;color:rgba(255,255,255,0.65);font-size:13.5px}
+.sb-item:hover{background:rgba(255,255,255,0.07);color:#fff}
+.sb-item.active{background:rgba(91,76,245,0.3);color:#c4baff}
+.sb-item-icon{width:18px;text-align:center;font-size:16px}
+.sb-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08)}
+.sb-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff}
+.sb-username{font-size:13px;color:rgba(255,255,255,0.8)}
+.sb-role{font-size:11px;color:rgba(255,255,255,0.35)}
+.sb-switch{margin-left:auto;font-size:11px;color:var(--accent2);cursor:pointer;background:rgba(91,76,245,0.2);border:none;padding:3px 8px;border-radius:5px;color:#c4baff}
+#topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+.tb-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;flex:1}
+.tb-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:20px;font-weight:500}
+.tb-badge.xp{background:var(--accent-soft);color:var(--accent)}
+.tb-badge.streak{background:var(--amber-soft);color:var(--amber)}
+.tb-sync{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}
+.sync-dot.error{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+#content{padding:28px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.card-sm{padding:14px 16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{background:var(--surface2);border-radius:var(--r);padding:16px;text-align:center}
+.stat-val{font-size:28px;font-weight:700;font-family:'Playfair Display',serif;color:var(--accent)}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.section-title{font-size:20px;font-weight:700;margin-bottom:4px;color:var(--ink)}
+.section-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.badge-green{background:var(--green-soft);color:var(--green)}
+.badge-amber{background:var(--amber-soft);color:var(--amber)}
+.badge-red{background:var(--red-soft);color:var(--red)}
+.badge-blue{background:var(--blue-soft);color:var(--blue)}
+.badge-accent{background:var(--accent-soft);color:var(--accent)}
+.badge-teal{background:var(--teal-soft);color:var(--teal)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn-outline:hover{background:var(--accent-soft)}
+.btn-sm{padding:5px 11px;font-size:12.5px}
+.btn-danger{background:var(--red-soft);color:var(--red);border:1px solid var(--red)}
+.prog-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.4s}
+.prog-fill-green{background:var(--green)}
+.prog-fill-amber{background:var(--amber)}
+.subject-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:18px;cursor:pointer;transition:all 0.15s}
+.subject-card:hover{border-color:var(--accent2);box-shadow:0 4px 20px rgba(91,76,245,0.08)}
+.topic-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;cursor:pointer;transition:background 0.12s;border:1px solid transparent}
+.topic-item:hover{background:var(--surface2);border-color:var(--border)}
+.topic-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.topic-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.resource-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.12s}
+.resource-item:hover{border-color:var(--accent2);background:var(--accent-soft)}
+.resource-check{margin-left:auto;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px}
+.resource-check.done{background:var(--green-soft);color:var(--green)}
+.resource-check.pending{background:var(--surface2);color:var(--muted)}
+.quiz-q{font-size:16px;font-weight:500;margin-bottom:16px;line-height:1.6}
+.quiz-opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.12s;font-size:14px}
+.quiz-opt:hover{border-color:var(--accent2);background:var(--accent-soft)}
+.quiz-opt.selected{border-color:var(--accent);background:var(--accent-soft)}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-soft)}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-soft)}
+.quiz-letter{width:24px;height:24px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;margin-top:1px}
+.score-ring{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:6px solid;margin:0 auto 16px;flex-direction:column}
+.score-pct{font-size:28px;font-weight:700;font-family:'Playfair Display',serif}
+.log-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.log-row:last-child{border-bottom:none}
+.achievement{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 10px;border:1px solid var(--border);border-radius:var(--r2);text-align:center}
+.achievement.earned .achievement-icon{background:var(--accent-soft)}
+.achievement-icon{font-size:32px;width:56px;height:56px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center}
+.achievement-name{font-size:12px;font-weight:500}
+.achievement-desc{font-size:11px;color:var(--muted)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--surface);border-radius:var(--r2);width:100%;max-width:640px;max-height:90vh;overflow-y:auto;padding:28px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--muted)}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:20px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.input{width:100%;padding:8px 12px;border:1px solid var(--border2);border-radius:8px;font-size:14px;background:var(--surface);color:var(--ink);outline:none;font-family:'DM Sans',sans-serif}
+.input:focus{border-color:var(--accent)}
+.tab-bar{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.tab{padding:9px 16px;font-size:13.5px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.12s}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500}
+.mt-4{margin-top:4px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}
+.mb-4{margin-bottom:4px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}
+.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-8{gap:8px}.gap-12{gap:12px}.flex-1{flex:1}
+.text-sm{font-size:13px}.text-muted{color:var(--muted)}.text-green{color:var(--green)}.text-accent{color:var(--accent)}
+select{font-family:'DM Sans',sans-serif}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="sidebar">
+    <div class="sb-header">
+      <div class="sb-logo">📚 StudyPortal</div>
+      <div class="sb-sub">Nandini Garg · Grade 9</div>
+      <div class="sb-streak">
+        <span>🔥</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.7)">Streak</span>
+        <span class="sb-streak-num" id="streakNum">0 days</span>
+      </div>
+    </div>
+    <div class="sb-nav" id="sidebarNav"></div>
+    <div class="sb-footer">
+      <div class="flex items-center gap-12">
+        <div class="sb-avatar" id="avatarInitials">NG</div>
+        <div>
+          <div class="sb-username" id="sidebarName">Nandini</div>
+          <div class="sb-role" id="sidebarRole">Grade 9 Student</div>
+        </div>
+        <button class="sb-switch" onclick="switchRole()" id="roleBtn">Admin</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="topbar">
+      <div class="tb-title" id="topbarTitle">Dashboard</div>
+      <div class="tb-sync" id="syncStatus"><div class="sync-dot" id="syncDot"></div><span id="syncText">Synced</span></div>
+      <span class="tb-badge xp" id="xpBadge">⭐ 0 XP</span>
+      <span class="tb-badge streak" id="streakBadge">🔥 0d streak</span>
+    </div>
+    <div id="content"></div>
+  </div>
+</div>
+
+<div id="modalOverlay" class="modal-overlay" style="display:none" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 style="font-size:20px" id="modalTitle">Worksheet</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// SUPABASE CONFIG
+// ═══════════════════════════════════════════
+const SUPABASE_URL = 'https://mhyavhkgsrkfklirjvhg.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oeWF2aGtnc3JrZmtsaXJqdmhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTIzNTcsImV4cCI6MjA5NTgyODM1N30.KH94v9dY0hh2cHhcEOUjcpWizZBkqsd1V8OZRznfFAw';
+const STUDENT_ID = 'nandini';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ═══════════════════════════════════════════
+// SYNC HELPERS
+// ═══════════════════════════════════════════
+function setSyncStatus(status) {
+  const dot = document.getElementById('syncDot');
+  const txt = document.getElementById('syncText');
+  if (!dot || !txt) return;
+  dot.className = 'sync-dot' + (status === 'syncing' ? ' syncing' : status === 'error' ? ' error' : '');
+  txt.textContent = status === 'syncing' ? 'Syncing…' : status === 'error' ? 'Sync error' : 'Synced';
+}
+
+async function sbGet(table, match) {
+  let q = sb.from(table).select('*').eq('student_id', STUDENT_ID);
+  if (match) Object.entries(match).forEach(([k, v]) => { q = q.eq(k, v); });
+  const { data, error } = await q;
+  if (error) { console.error(table, error); return []; }
+  return data || [];
+}
+
+async function sbUpsert(table, row) {
+  setSyncStatus('syncing');
+  const { error } = await sb.from(table).upsert({ student_id: STUDENT_ID, ...row }, { onConflict: 'student_id' });
+  setSyncStatus(error ? 'error' : 'synced');
+  if (error) console.error('upsert', table, error);
+}
+
+async function sbInsert(table, row) {
+  setSyncStatus('syncing');
+  const { error } = await sb.from(table).insert({ student_id: STUDENT_ID, ...row });
+  setSyncStatus(error ? 'error' : 'synced');
+  if (error) console.error('insert', table, error);
+}
+
+async function sbUpsertUnique(table, conflictCol, row) {
+  setSyncStatus('syncing');
+  const { error } = await sb.from(table).upsert({ student_id: STUDENT_ID, ...row }, { onConflict: conflictCol });
+  setSyncStatus(error ? 'error' : 'synced');
+  if (error) console.error('upsert-unique', table, error);
+}
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let state = {
+  role: 'student', page: 'dashboard',
+  selectedSubject: null, selectedUnit: null,
+  xp: 0, streak: 0, lastLogin: null,
+  completedTopics: {}, completedResources: {},
+  quizHistory: [], achievements: [],
+  questionBank: {}, activeQuiz: null,
+  spaceRepeat: {}, loaded: false
+};
+
+// ═══════════════════════════════════════════
+// LOAD FROM SUPABASE
+// ═══════════════════════════════════════════
+async function loadFromSupabase() {
+  setSyncStatus('syncing');
+  try {
+    const [stats, progress, resources, quizzes, qbank, spaced] = await Promise.all([
+      sbGet('ng_stats'),
+      sbGet('ng_progress'),
+      sbGet('ng_resources'),
+      sbGet('ng_quiz_history'),
+      sbGet('ng_question_bank'),
+      sbGet('ng_spaced_review')
+    ]);
+
+    // Stats
+    if (stats.length) {
+      const s = stats[0];
+      state.xp = s.xp || 0;
+      state.streak = s.streak || 0;
+      state.lastLogin = s.last_login;
+      state.achievements = s.achievements || [];
+    }
+
+    // Progress
+    state.completedTopics = {};
+    progress.forEach(p => { state.completedTopics[p.topic_key] = p.completed; });
+
+    // Resources
+    state.completedResources = {};
+    resources.forEach(r => { state.completedResources[r.resource_key] = r.reviewed; });
+
+    // Quiz history
+    state.quizHistory = quizzes.map(q => ({
+      sid: q.subject_id, topic: q.topic,
+      correct: q.correct, total: q.total,
+      pct: q.pct, date: q.quiz_date, ts: new Date(q.created_at).getTime()
+    })).sort((a, b) => a.ts - b.ts);
+
+    // Question bank
+    state.questionBank = {};
+    qbank.forEach(q => {
+      if (!state.questionBank[q.subject_id]) state.questionBank[q.subject_id] = [];
+      state.questionBank[q.subject_id].push({
+        q: q.question, opts: q.options,
+        ans: q.correct_index, exp: q.explanation,
+        _topic: q.topic, _generated: q.generated
+      });
+    });
+
+    // Spaced review
+    state.spaceRepeat = {};
+    spaced.filter(s => !s.dismissed).forEach(s => {
+      const key = s.id;
+      state.spaceRepeat[key] = {
+        id: s.id, sid: s.subject_id, topic: s.topic,
+        ques: s.question_data, due: new Date(s.due_at).getTime()
+      };
+    });
+
+    state.loaded = true;
+    updateStreak();
+    setSyncStatus('synced');
+  } catch (e) {
+    console.error('Load error', e);
+    setSyncStatus('error');
+    // Fall back to localStorage
+    const ls = localStorage.getItem('ng_portal_v3');
+    if (ls) try { Object.assign(state, JSON.parse(ls)); } catch(e2) {}
+    state.loaded = true;
+    updateStreak();
+  }
+  renderSidebar();
+  renderPage();
+}
+
+function saveLocal() {
+  localStorage.setItem('ng_portal_v3', JSON.stringify({
+    role: state.role, xp: state.xp, streak: state.streak,
+    lastLogin: state.lastLogin, completedTopics: state.completedTopics,
+    completedResources: state.completedResources, quizHistory: state.quizHistory,
+    achievements: state.achievements, questionBank: state.questionBank,
+    spaceRepeat: state.spaceRepeat
+  }));
+}
+
+async function saveStats() {
+  saveLocal();
+  await sbUpsert('ng_stats', {
+    xp: state.xp, streak: state.streak,
+    last_login: state.lastLogin,
+    achievements: state.achievements,
+    updated_at: new Date().toISOString()
+  });
+}
+
+function updateStreak() {
+  const today = new Date().toISOString().split('T')[0];
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  if (state.lastLogin === today) return;
+  if (state.lastLogin === yesterday) state.streak++;
+  else if (!state.lastLogin) state.streak = 1;
+  else state.streak = 1;
+  state.lastLogin = today;
+  saveStats();
+}
+
+// ═══════════════════════════════════════════
+// CURRICULUM DATA — Texas TEKS Grade 9
+// ═══════════════════════════════════════════
+const SUBJECTS = [
+  {
+    id:'english', name:'English I', icon:'📖', color:'#dbeafe', iconBg:'#2563eb',
+    desc:'Reading, writing, speaking & listening', teks:'TEKS Chapter 110.38',
+    units:[
+      {id:'e1',name:'Literary Analysis & Fiction',topics:['Plot & narrative structure','Characterization techniques','Theme & symbolism','Point of view & perspective','Figurative language']},
+      {id:'e2',name:'Poetry & Drama',topics:['Poetic forms & devices','Meter & rhyme scheme','Drama structure & elements','Shakespeare introduction']},
+      {id:'e3',name:'Informational & Expository Texts',topics:['Main idea & supporting details','Text structure (cause/effect, compare/contrast)','Author\'s purpose & bias','Evaluating sources & credibility']},
+      {id:'e4',name:'Composition & Writing',topics:['Expository essay structure','Argumentative writing','Narrative writing techniques','Research & citation (MLA)','Grammar & mechanics']},
+      {id:'e5',name:'Speaking, Listening & Media',topics:['Oral presentation skills','Active listening strategies','Media literacy & evaluation','Debate & discussion skills']}
+    ],
+    resources:[
+      {name:'CommonLit — Grade 9 ELA',type:'Reading platform',url:'https://www.commonlit.org',icon:'📄'},
+      {name:'Purdue OWL — MLA Guide',type:'Reference',url:'https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_general_format.html',icon:'📝'},
+      {name:'Texas Gateway — English I',type:'Lessons',url:'https://www.texasgateway.org/subject/english-i',icon:'🎓'},
+      {name:'Crash Course Literature',type:'Video series',url:'https://www.youtube.com/playlist?list=PL8dPuuaLjXtOeEc9ME62zTfqc0h6Pe8vb',icon:'▶️'},
+      {name:'IXL Language Arts Grade 9',type:'Practice',url:'https://www.ixl.com/ela/grade-9',icon:'✏️'}
+    ]
+  },
+  {
+    id:'algebra', name:'Algebra I', icon:'🔢', color:'#ede9ff', iconBg:'#5b4cf5',
+    desc:'Linear equations, functions, and data', teks:'TEKS Chapter 111.39',
+    units:[
+      {id:'a1',name:'Number & Algebraic Methods',topics:['Real number system','Order of operations','Algebraic expressions','Properties of real numbers']},
+      {id:'a2',name:'Linear Functions & Equations',topics:['Slope & rate of change','Slope-intercept form y=mx+b','Point-slope & standard form','Graphing linear equations','Writing equations from data']},
+      {id:'a3',name:'Systems of Equations',topics:['Graphing systems','Substitution method','Elimination method','Applications of systems']},
+      {id:'a4',name:'Inequalities',topics:['Solving linear inequalities','Graphing on number line','Compound inequalities','Absolute value equations']},
+      {id:'a5',name:'Quadratic Functions',topics:['Parabolas & vertex form','Factoring quadratics','Quadratic formula','FOIL & polynomial operations','Discriminant']},
+      {id:'a6',name:'Exponential & Data',topics:['Exponential growth & decay','Scatter plots & correlation','Linear regression','Statistics & box plots']}
+    ],
+    resources:[
+      {name:'Khan Academy — Algebra I',type:'Interactive course',url:'https://www.khanacademy.org/math/algebra',icon:'🟠'},
+      {name:'Desmos Graphing Calculator',type:'Tool',url:'https://www.desmos.com/calculator',icon:'📊'},
+      {name:'Texas Gateway — Algebra I',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/algebra-i',icon:'🎓'},
+      {name:'IXL Algebra I',type:'Practice',url:'https://www.ixl.com/math/algebra-1',icon:'✏️'},
+      {name:'PurpleMath Algebra',type:'Reference',url:'https://www.purplemath.com',icon:'📐'}
+    ]
+  },
+  {
+    id:'biology', name:'Biology', icon:'🧬', color:'#dcfce7', iconBg:'#16a34a',
+    desc:'Life science, cells, genetics & ecology', teks:'TEKS Chapter 112.34',
+    units:[
+      {id:'b1',name:'Cell Structure & Function',topics:['Prokaryotic vs eukaryotic cells','Cell organelles & functions','Cell membrane & transport','Osmosis & diffusion','Cell cycle & mitosis']},
+      {id:'b2',name:'Biochemistry & Metabolism',topics:['Macromolecules (proteins, lipids, carbs, nucleic acids)','Enzymes & catalysis','Photosynthesis','Cellular respiration','ATP & energy']},
+      {id:'b3',name:'Genetics & Heredity',topics:['DNA structure & replication','Protein synthesis (transcription & translation)','Mendelian genetics','Punnett squares','Mutations & genetic disorders']},
+      {id:'b4',name:'Evolution & Natural Selection',topics:['Darwin\'s theory','Evidence of evolution','Natural selection mechanisms','Speciation','Fossil record & comparative anatomy']},
+      {id:'b5',name:'Ecology & Ecosystems',topics:['Biomes & habitats','Food webs & energy flow','Nutrient cycles (carbon, nitrogen, water)','Population dynamics','Human impact & conservation']}
+    ],
+    resources:[
+      {name:'CK-12 Biology',type:'Free textbook',url:'https://www.ck12.org/student/biology',icon:'📗'},
+      {name:'Khan Academy — Biology',type:'Video + practice',url:'https://www.khanacademy.org/science/ap-biology',icon:'🟠'},
+      {name:'Texas Gateway — Biology',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/biology',icon:'🎓'},
+      {name:'Amoeba Sisters Biology',type:'YouTube',url:'https://www.youtube.com/@AmoebaSisters',icon:'▶️'},
+      {name:'Biology Corner Worksheets',type:'Practice worksheets',url:'https://biologycorner.com',icon:'✏️'}
+    ]
+  },
+  {
+    id:'worldgeo', name:'World Geography', icon:'🌍', color:'#ccfbf1', iconBg:'#0d9488',
+    desc:'Physical & human geography, regions, culture', teks:'TEKS Chapter 113.42',
+    units:[
+      {id:'w1',name:'Geographic Tools & Concepts',topics:['Map projections & types','Latitude & longitude','Geographic Information Systems (GIS)','Scale, distance & direction','Reading thematic maps']},
+      {id:'w2',name:'Physical Systems',topics:['Plate tectonics & landforms','Weather & climate systems','Biomes & vegetation','Rivers, oceans & water systems','Natural disasters & hazards']},
+      {id:'w3',name:'Human Geography',topics:['Population distribution & density','Migration patterns','Urbanization & megacities','Cultural regions & diffusion','Languages & religion']},
+      {id:'w4',name:'Economic Systems & Development',topics:['Types of economies','World trade & globalization','Developed vs developing nations','Resources & industries','Economic indicators']},
+      {id:'w5',name:'World Regions in Depth',topics:['North America & Latin America','Europe & Russia','Sub-Saharan Africa','Middle East & North Africa','Asia & Pacific Rim']}
+    ],
+    resources:[
+      {name:'National Geographic Education',type:'Maps & lessons',url:'https://education.nationalgeographic.org',icon:'🗺️'},
+      {name:'Texas Gateway — World Geography',type:'TEKS-aligned',url:'https://www.texasgateway.org/subject/world-geography',icon:'🎓'},
+      {name:'GeoGuessr (free)',type:'Practice',url:'https://www.geoguessr.com',icon:'🌐'},
+      {name:'Khan Academy — AP Human Geography',type:'Videos',url:'https://www.khanacademy.org/humanities/ap-human-geography',icon:'🟠'},
+      {name:'World Atlas',type:'Reference',url:'https://www.worldatlas.com',icon:'📚'}
+    ]
+  },
+  {
+    id:'health', name:'Health Education', icon:'💪', color:'#fef3c7', iconBg:'#d97706',
+    desc:'Physical health, wellness & life skills', teks:'TEKS Chapter 115',
+    units:[
+      {id:'h1',name:'Physical Health & Wellness',topics:['Components of fitness','Nutrition & dietary guidelines','Sleep & recovery','Managing chronic conditions']},
+      {id:'h2',name:'Mental & Emotional Health',topics:['Stress management techniques','Anxiety & depression awareness','Healthy relationships','Decision making & goal setting']},
+      {id:'h3',name:'Personal Safety',topics:['Substance use prevention','Digital safety & cyberbullying','First aid & CPR basics','Emergency preparedness']}
+    ],
+    resources:[
+      {name:'CDC Youth Health',type:'Resource',url:'https://www.cdc.gov/healthyyouth/index.htm',icon:'🏥'},
+      {name:'MyPlate (USDA)',type:'Nutrition',url:'https://www.myplate.gov',icon:'🥗'}
+    ]
+  },
+  {
+    id:'pe', name:'Physical Education', icon:'🏃', color:'#fee2e2', iconBg:'#dc2626',
+    desc:'Fitness, sport, movement concepts', teks:'TEKS Chapter 116',
+    units:[
+      {id:'p1',name:'Fitness Concepts',topics:['FITT principle','Aerobic vs anaerobic exercise','Body composition','Heart rate zones','Personal fitness planning']},
+      {id:'p2',name:'Sports & Activities',topics:['Team sports rules & strategy','Individual sports','Lifetime fitness activities','Sportsmanship & leadership']}
+    ],
+    resources:[
+      {name:'Fitness Blender',type:'Workout videos',url:'https://www.fitnessblender.com',icon:'▶️'},
+      {name:'ExRx.net',type:'Exercise reference',url:'https://exrx.net',icon:'💪'}
+    ]
+  }
+];
+
+const BASE_QUESTIONS = {
+  english:[
+    {q:'What is the main purpose of a thesis statement in an expository essay?',opts:['To summarize the entire essay in detail','To state the main argument or central idea the essay will support','To introduce background information about the topic','To provide a closing thought for the reader'],ans:1,exp:'A thesis statement presents the writer\'s central claim or main argument that the body paragraphs will support.'},
+    {q:'Which literary device is used when an author gives human characteristics to a non-human object?',opts:['Metaphor','Simile','Personification','Alliteration'],ans:2,exp:'Personification assigns human traits or actions to animals, objects, or abstract ideas.'},
+    {q:'In MLA format, what information is required in a basic in-text citation?',opts:['Author\'s full name and page number','Author\'s last name and page number','Title of the work and year','URL and access date'],ans:1,exp:'MLA in-text citations use the author\'s last name and page number in parentheses, e.g., (Smith 45).'},
+    {q:'What is the difference between a protagonist and an antagonist?',opts:['Protagonist is minor; antagonist is major','Protagonist is the main character; antagonist creates conflict against them','They are the same character seen from two viewpoints','Protagonist is evil; antagonist is good'],ans:1,exp:'The protagonist is the central character the story follows, while the antagonist opposes or creates conflict for them.'},
+    {q:'Which text structure is used when an author explains why something happened and its results?',opts:['Compare and contrast','Problem and solution','Cause and effect','Sequence and order'],ans:2,exp:'Cause and effect structure describes why events happen and what results from them.'}
+  ],
+  algebra:[
+    {q:'What is the slope of the line passing through points (2, 5) and (4, 11)?',opts:['2','3','4','6'],ans:1,exp:'Slope = (11-5)/(4-2) = 6/2 = 3.'},
+    {q:'Solve for x: 3x - 7 = 14',opts:['x = 5','x = 7','x = 3','x = 2'],ans:1,exp:'Add 7 to both sides: 3x = 21. Divide by 3: x = 7.'},
+    {q:'Which form is y = 2x + 5?',opts:['Standard form','Point-slope form','Slope-intercept form','Vertex form'],ans:2,exp:'Slope-intercept form is y = mx + b, where m is slope and b is y-intercept.'},
+    {q:'Factor completely: x² + 5x + 6',opts:['(x+1)(x+6)','(x+2)(x+3)','(x-3)(x-2)','(x+5)(x+1)'],ans:1,exp:'Find two numbers that multiply to 6 and add to 5: 2 and 3. So (x+2)(x+3).'},
+    {q:'If f(x) = 2x² - 3x + 1, what is f(2)?',opts:['3','5','7','9'],ans:0,exp:'f(2) = 2(4) - 3(2) + 1 = 8 - 6 + 1 = 3.'}
+  ],
+  biology:[
+    {q:'Which organelle is known as the "powerhouse of the cell"?',opts:['Nucleus','Ribosome','Mitochondria','Golgi apparatus'],ans:2,exp:'Mitochondria produce ATP through cellular respiration.'},
+    {q:'What process do plants use to convert sunlight into chemical energy?',opts:['Cellular respiration','Fermentation','Photosynthesis','Osmosis'],ans:2,exp:'Photosynthesis uses sunlight, CO₂ and water to produce glucose and oxygen in chloroplasts.'},
+    {q:'Which nitrogen base pairs with Adenine in DNA?',opts:['Guanine','Cytosine','Thymine','Uracil'],ans:2,exp:'In DNA, Adenine (A) pairs with Thymine (T).'},
+    {q:'What is the correct sequence of mitosis phases?',opts:['Interphase → Anaphase → Metaphase → Prophase','Prophase → Metaphase → Anaphase → Telophase → Cytokinesis','Metaphase → Prophase → Anaphase → Cytokinesis','Telophase → Anaphase → Metaphase → Prophase'],ans:1,exp:'PMAT: Prophase, Metaphase, Anaphase, Telophase, then Cytokinesis.'},
+    {q:'According to Darwin, what drives natural selection?',opts:['Random mutations only','Survival of the fittest based on heritable traits','Intentional adaptation by organisms','Geographic isolation alone'],ans:1,exp:'Natural selection acts on heritable variation — better-adapted individuals survive and reproduce more.'}
+  ],
+  worldgeo:[
+    {q:'Which map projection preserves shape but distorts size near the poles?',opts:['Peters projection','Robinson projection','Mercator projection','Goode\'s homolosine projection'],ans:2,exp:'The Mercator projection is conformal but greatly exaggerates landmasses near the poles.'},
+    {q:'What is the term for the movement of people from rural to urban areas?',opts:['Migration','Urbanization','Emigration','Gentrification'],ans:1,exp:'Urbanization refers to the increasing proportion of people living in cities.'},
+    {q:'The equator divides the Earth into which two hemispheres?',opts:['Eastern and Western','Arctic and Antarctic','Northern and Southern','Atlantic and Pacific'],ans:2,exp:'The equator (0° latitude) divides Earth into Northern and Southern hemispheres.'},
+    {q:'Which economic term describes the total value of goods and services produced by a country in a year?',opts:['CPI','GDP','HDI','PPP'],ans:1,exp:'GDP (Gross Domestic Product) measures total monetary value of all goods and services produced.'},
+    {q:'Plate tectonics explains which of the following?',opts:['Ocean tides','Formation of mountains and earthquakes','Atmospheric weather patterns','Seasonal changes'],ans:1,exp:'Plate tectonics describes crustal plate movement, causing earthquakes, volcanoes, and mountains.'}
+  ],
+  health:[
+    {q:'What does the FITT principle stand for?',opts:['Frequency, Intensity, Time, Type','Fitness, Interval, Training, Technique','Force, Impact, Tension, Tone','Flexibility, Interval, Tempo, Training'],ans:0,exp:'FITT = Frequency, Intensity, Time, Type — the four variables of an exercise program.'},
+    {q:'Which macronutrient is the body\'s primary energy source?',opts:['Protein','Fat','Carbohydrates','Vitamins'],ans:2,exp:'Carbohydrates are broken down into glucose, the body\'s main fuel source.'}
+  ],
+  pe:[
+    {q:'What is the target heart rate zone for aerobic exercise for most teens?',opts:['40-50% max HR','60-85% max HR','90-100% max HR','25-40% max HR'],ans:1,exp:'The aerobic training zone is approximately 60-85% of maximum heart rate.'}
+  ]
+};
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+const NAV_STUDENT = [
+  {section:'Learning'},{id:'dashboard',label:'Dashboard',icon:'🏠'},
+  {id:'subjects',label:'Subjects',icon:'📚'},{id:'resources',label:'Resources',icon:'🔗'},
+  {section:'Practice'},{id:'worksheets',label:'Worksheets',icon:'📝'},
+  {id:'generate',label:'Generate Quiz',icon:'✨'},{id:'spaced',label:'Spaced Review',icon:'🔄'},
+  {section:'Progress'},{id:'progress',label:'My Progress',icon:'📈'},
+  {id:'history',label:'Quiz History',icon:'📋'},{id:'achievements',label:'Achievements',icon:'🏆'}
+];
+const NAV_ADMIN = [
+  {section:'Admin'},{id:'dashboard',label:'Overview',icon:'🏠'},
+  {id:'progress',label:'Nandini\'s Progress',icon:'📈'},
+  {id:'history',label:'Quiz Logs',icon:'📋'},
+  {id:'subjects',label:'Curriculum',icon:'📚'},
+  {id:'generate',label:'Assign Worksheet',icon:'📌'},
+  {id:'settings',label:'Settings',icon:'⚙️'}
+];
+
+function renderSidebar() {
+  const nav = state.role === 'admin' ? NAV_ADMIN : NAV_STUDENT;
+  let html = '';
+  nav.forEach(item => {
+    if (item.section) html += `<div class="sb-section">${item.section}</div>`;
+    else html += `<div class="sb-item ${state.page===item.id?'active':''}" onclick="navigate('${item.id}')">`
+      + `<span class="sb-item-icon">${item.icon}</span>${item.label}</div>`;
+  });
+  document.getElementById('sidebarNav').innerHTML = html;
+  document.getElementById('streakNum').textContent = state.streak + ' days';
+  document.getElementById('xpBadge').textContent = '⭐ ' + state.xp + ' XP';
+  document.getElementById('streakBadge').textContent = '🔥 ' + state.streak + 'd streak';
+  document.getElementById('sidebarName').textContent = state.role === 'admin' ? 'Parent/Admin' : 'Nandini';
+  document.getElementById('sidebarRole').textContent = state.role === 'admin' ? 'Administrator' : 'Grade 9 Student';
+  document.getElementById('roleBtn').textContent = state.role === 'admin' ? 'Student' : 'Admin';
+  document.getElementById('avatarInitials').textContent = state.role === 'admin' ? 'AD' : 'NG';
+}
+
+function switchRole() {
+  state.role = state.role === 'admin' ? 'student' : 'admin';
+  state.page = 'dashboard';
+  renderSidebar(); renderPage();
+}
+
+function navigate(page) {
+  state.page = page; state.selectedSubject = null; state.selectedUnit = null;
+  renderSidebar(); renderPage();
+  document.getElementById('main').scrollTop = 0;
+}
+
+// ═══════════════════════════════════════════
+// PAGE ROUTER
+// ═══════════════════════════════════════════
+function renderPage() {
+  if (!state.loaded) {
+    document.getElementById('content').innerHTML = '<div style="text-align:center;padding:60px"><div class="spinner"></div><p class="text-muted mt-16">Loading from Supabase…</p></div>';
+    return;
+  }
+  const titles = {dashboard:'Dashboard',subjects:'Subjects & Curriculum',resources:'Resources',
+    worksheets:'Worksheets',generate:'Generate Quiz',spaced:'Spaced Review',
+    progress:'My Progress',history:'Quiz History',achievements:'Achievements',settings:'Settings'};
+  document.getElementById('topbarTitle').textContent = titles[state.page] || 'Study Portal';
+  const c = document.getElementById('content');
+  const pages = {
+    dashboard: renderDashboard, subjects: renderSubjects, resources: renderResources,
+    worksheets: renderWorksheets, generate: renderGenerate, spaced: renderSpaced,
+    progress: renderProgress, history: renderHistory, achievements: renderAchievements,
+    settings: renderSettings
+  };
+  c.innerHTML = (pages[state.page] || renderDashboard)();
+}
+
+// ═══════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════
+function renderDashboard() {
+  const totalTopics = SUBJECTS.reduce((a,s)=>a+s.units.reduce((b,u)=>b+u.topics.length,0),0);
+  const doneTopics = Object.values(state.completedTopics).filter(Boolean).length;
+  const totalRes = SUBJECTS.reduce((a,s)=>a+s.resources.length,0);
+  const doneRes = Object.values(state.completedResources).filter(Boolean).length;
+  const avgScore = state.quizHistory.length ? Math.round(state.quizHistory.reduce((a,q)=>a+q.pct,0)/state.quizHistory.length) : 0;
+  const pct = totalTopics > 0 ? Math.round(doneTopics/totalTopics*100) : 0;
+  const recent = [...state.quizHistory].reverse().slice(0,3);
+  const spacedDue = getSpacedDue();
+
+  if (state.role === 'admin') return renderAdminDashboard(totalTopics,doneTopics,totalRes,doneRes,avgScore,pct);
+
+  return `<div style="max-width:900px">
+    <h1 class="section-title">Welcome back, Nandini! 👋</h1>
+    <p class="section-sub">Here's your learning snapshot for today · All data synced to Supabase ☁️</p>
+    <div class="grid-4 mb-20">
+      <div class="stat"><div class="stat-val">${pct}%</div><div class="stat-lbl">Curriculum complete</div></div>
+      <div class="stat"><div class="stat-val">${state.xp}</div><div class="stat-lbl">Total XP earned</div></div>
+      <div class="stat"><div class="stat-val">${avgScore>0?avgScore+'%':'—'}</div><div class="stat-lbl">Avg quiz score</div></div>
+      <div class="stat"><div class="stat-val">${state.streak}</div><div class="stat-lbl">Day streak 🔥</div></div>
+    </div>
+    <div class="grid-2" style="gap:20px">
+      <div>
+        <div class="card">
+          <div class="flex items-center justify-between mb-12">
+            <h3 style="font-size:15px;font-weight:600">Progress by Subject</h3>
+            <span class="badge badge-accent">${doneTopics}/${totalTopics} topics</span>
+          </div>
+          ${SUBJECTS.map(s=>{
+            const st=s.units.reduce((a,u)=>a+u.topics.length,0);
+            const sd=s.units.reduce((a,u)=>a+u.topics.filter(t=>state.completedTopics[s.id+'_'+t]).length,0);
+            const sp=st>0?Math.round(sd/st*100):0;
+            return `<div class="mb-12"><div class="flex items-center justify-between mb-4">
+              <span style="font-size:13px">${s.icon} ${s.name}</span>
+              <span style="font-size:12px;color:var(--muted)">${sp}%</span>
+            </div><div class="prog-bar"><div class="prog-fill" style="width:${sp}%"></div></div></div>`;
+          }).join('')}
+        </div>
+        ${spacedDue.length>0?`<div class="card mt-16" style="border-color:var(--amber)">
+          <div class="flex items-center gap-8 mb-12"><span style="font-size:18px">🔄</span>
+            <h3 style="font-size:15px;font-weight:600">Spaced Review Due (${spacedDue.length})</h3></div>
+          ${spacedDue.slice(0,3).map(t=>`<div class="topic-item" onclick="startSpacedSession()">
+            <span style="font-size:13px;flex:1">${t.ques.q ? t.ques.q.substring(0,50)+'…' : t.topic}</span>
+            <span class="badge badge-amber">Review due</span>
+          </div>`).join('')}
+          <button class="btn btn-outline btn-sm mt-12" onclick="navigate('spaced')">See all →</button>
+        </div>`:''}
+      </div>
+      <div>
+        <div class="card">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:12px">Quick Launch</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            ${SUBJECTS.slice(0,4).map(s=>`<div style="padding:12px;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;text-align:center" onclick="launchSubject('${s.id}')">
+              <div style="font-size:24px;margin-bottom:4px">${s.icon}</div>
+              <div style="font-size:12px;font-weight:500">${s.name}</div>
+            </div>`).join('')}
+          </div>
+          <button class="btn btn-primary mt-12" style="width:100%" onclick="navigate('generate')">✨ Generate New Quiz</button>
+          <button class="btn btn-outline mt-8" style="width:100%" onclick="navigate('worksheets')">📝 View Worksheets</button>
+        </div>
+        ${recent.length>0?`<div class="card mt-16">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:12px">Recent Quizzes</h3>
+          ${recent.map(q=>`<div class="log-row">
+            <span style="font-size:18px">${SUBJECTS.find(s=>s.id===q.sid)?.icon||'📝'}</span>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500">${q.topic}</div>
+            <div style="font-size:12px;color:var(--muted)">${q.date}</div></div>
+            <span class="badge ${q.pct>=80?'badge-green':q.pct>=60?'badge-amber':'badge-red'}">${q.pct}%</span>
+          </div>`).join('')}
+        </div>`:``}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAdminDashboard(totalTopics,doneTopics,totalRes,doneRes,avgScore,pct) {
+  const recent = [...state.quizHistory].reverse().slice(0,5);
+  return `<div style="max-width:900px">
+    <h1 class="section-title">Admin Overview</h1>
+    <p class="section-sub">Nandini's learning progress · Live from Supabase ☁️</p>
+    <div class="grid-4 mb-20">
+      <div class="stat"><div class="stat-val">${pct}%</div><div class="stat-lbl">Curriculum complete</div></div>
+      <div class="stat"><div class="stat-val">${state.xp}</div><div class="stat-lbl">XP earned</div></div>
+      <div class="stat"><div class="stat-val">${avgScore>0?avgScore+'%':'—'}</div><div class="stat-lbl">Avg quiz score</div></div>
+      <div class="stat"><div class="stat-val">${state.streak}d</div><div class="stat-lbl">Current streak</div></div>
+    </div>
+    <div class="grid-2" style="gap:20px">
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Progress by Subject</h3>
+        ${SUBJECTS.map(s=>{
+          const st=s.units.reduce((a,u)=>a+u.topics.length,0);
+          const sd=s.units.reduce((a,u)=>a+u.topics.filter(t=>state.completedTopics[s.id+'_'+t]).length,0);
+          const sp=st>0?Math.round(sd/st*100):0;
+          return `<div class="mb-12"><div class="flex items-center justify-between mb-4">
+            <span style="font-size:13px">${s.icon} ${s.name}</span>
+            <span style="font-size:12px;color:var(--muted)">${sd}/${st} · ${sp}%</span>
+          </div><div class="prog-bar"><div class="prog-fill ${sp<40?'prog-fill-amber':''}" style="width:${sp}%"></div></div></div>`;
+        }).join('')}
+      </div>
+      <div>
+        <div class="card mb-16">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:12px">Recent Quiz Activity</h3>
+          ${recent.length===0?'<p class="text-muted text-sm">No quizzes yet.</p>':recent.map(q=>`
+            <div class="log-row">
+              <div style="flex:1"><div style="font-size:13px;font-weight:500">${q.topic}</div>
+              <div style="font-size:12px;color:var(--muted)">${q.date} · ${q.correct}/${q.total} correct</div></div>
+              <span class="badge ${q.pct>=80?'badge-green':q.pct>=60?'badge-amber':'badge-red'}">${q.pct}%</span>
+            </div>`).join('')}
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">Resources Reviewed</h3>
+          <p style="font-size:24px;font-weight:700;color:var(--accent)">${doneRes} <span style="font-size:14px;color:var(--muted);font-weight:400">of ${totalRes}</span></p>
+          <div class="prog-bar mt-8"><div class="prog-fill" style="width:${totalRes>0?Math.round(doneRes/totalRes*100):0}%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// SUBJECTS
+// ═══════════════════════════════════════════
+function renderSubjects() {
+  const sel = state.selectedSubject ? SUBJECTS.find(s=>s.id===state.selectedSubject) : null;
+  if (sel) return renderSubjectDetail(sel);
+  return `<div style="max-width:900px">
+    <h1 class="section-title">Texas TEKS — Grade 9 Curriculum</h1>
+    <p class="section-sub">Click any subject to explore units, topics and resources</p>
+    <div class="grid-2" style="gap:16px">
+    ${SUBJECTS.map(s=>{
+      const total=s.units.reduce((a,u)=>a+u.topics.length,0);
+      const done=s.units.reduce((a,u)=>a+u.topics.filter(t=>state.completedTopics[s.id+'_'+t]).length,0);
+      const pct=total>0?Math.round(done/total*100):0;
+      return `<div class="subject-card" onclick="selectSubject('${s.id}')">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:44px;height:44px;border-radius:10px;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${s.icon}</div>
+          <div style="flex:1">
+            <div style="font-size:15px;font-weight:600;margin-bottom:2px">${s.name}</div>
+            <div style="font-size:12px;color:var(--muted)">${s.desc}</div>
+            <div style="font-size:11px;color:var(--soft);margin-top:2px">${s.teks}</div>
+          </div>
+          <span class="badge badge-accent">${pct}%</span>
+        </div>
+        <div class="prog-bar mt-12"><div class="prog-fill" style="width:${pct}%"></div></div>
+        <div class="flex mt-8" style="gap:6px;flex-wrap:wrap">
+          ${s.units.map(u=>`<span class="badge badge-blue" style="font-size:10px">${u.name}</span>`).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+    </div>
+  </div>`;
+}
+
+function selectSubject(id) { state.selectedSubject = id; state.selectedUnit = null; renderPage(); }
+
+function renderSubjectDetail(s) {
+  const selUnit = state.selectedUnit || s.units[0].id;
+  const unit = s.units.find(u=>u.id===selUnit) || s.units[0];
+  return `<div style="max-width:900px">
+    <div class="flex items-center gap-12 mb-20">
+      <button class="btn btn-outline btn-sm" onclick="state.selectedSubject=null;renderPage()">← Back</button>
+      <div style="width:44px;height:44px;border-radius:10px;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:22px">${s.icon}</div>
+      <div><h1 class="section-title" style="margin-bottom:0">${s.name}</h1>
+        <p style="font-size:13px;color:var(--muted)">${s.teks} · ${s.units.reduce((a,u)=>a+u.topics.length,0)} topics</p></div>
+      <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="navigate('generate')">✨ Generate Quiz</button>
+    </div>
+    <div class="grid-2" style="gap:20px">
+      <div>
+        <h3 style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Units</h3>
+        ${s.units.map(u=>{
+          const done=u.topics.filter(t=>state.completedTopics[s.id+'_'+t]).length;
+          const active=selUnit===u.id;
+          return `<div class="topic-item" style="${active?'background:var(--accent-soft);border-color:var(--accent)':''}" onclick="state.selectedUnit='${u.id}';renderPage()">
+            <div style="flex:1"><div style="font-size:14px;font-weight:500">${u.name}</div>
+            <div style="font-size:12px;color:var(--muted)">${done}/${u.topics.length} topics done</div></div>
+            <div class="prog-bar" style="width:60px"><div class="prog-fill" style="width:${u.topics.length>0?Math.round(done/u.topics.length*100):0}%"></div></div>
+          </div>`;
+        }).join('')}
+        <h3 style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:20px;margin-bottom:10px">Resources</h3>
+        ${s.resources.map((r,i)=>{
+          const key=s.id+'_res_'+i; const done=state.completedResources[key];
+          return `<div class="resource-item" onclick="toggleResource('${key}','${r.url}')">
+            <div style="width:36px;height:36px;border-radius:8px;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${r.icon}</div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:500">${r.name}</div><div style="font-size:12px;color:var(--muted)">${r.type}</div></div>
+            <div class="resource-check ${done?'done':'pending'}">${done?'✓':'→'}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div>
+        <h3 style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">${unit.name} — Topics</h3>
+        ${unit.topics.map(t=>{
+          const key=s.id+'_'+t; const done=state.completedTopics[key];
+          const scores=state.quizHistory.filter(q=>q.topic===t&&q.sid===s.id);
+          const lastScore=scores.length?scores[scores.length-1].pct:null;
+          return `<div class="topic-item" onclick="toggleTopic('${key}','${s.id}')">
+            <div class="topic-check ${done?'checked':''}">${done?'✓':''}</div>
+            <span style="font-size:14px;flex:1">${t}</span>
+            ${lastScore!==null?`<span class="badge ${lastScore>=80?'badge-green':lastScore>=60?'badge-amber':'badge-red'}">${lastScore}%</span>`:''}
+            <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();startSubjectQuiz('${s.id}')" style="padding:3px 9px;font-size:11px">Quiz</button>
+          </div>`;
+        }).join('')}
+        <button class="btn btn-primary mt-12" onclick="navigate('generate')">✨ Generate worksheet for this unit</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function toggleTopic(key, sid) {
+  state.completedTopics[key] = !state.completedTopics[key];
+  if (state.completedTopics[key]) awardXP(10);
+  checkAchievements();
+  renderPage();
+  await sbUpsertUnique('ng_progress', 'student_id,topic_key',
+    { subject_id: sid, topic_key: key, completed: state.completedTopics[key], completed_at: new Date().toISOString() });
+  await saveStats();
+}
+
+async function toggleResource(key, url) {
+  if (!state.completedResources[key]) {
+    state.completedResources[key] = true;
+    awardXP(5);
+    renderPage();
+    await sbUpsertUnique('ng_resources', 'student_id,resource_key',
+      { resource_key: key, reviewed: true, reviewed_at: new Date().toISOString() });
+    await saveStats();
+  }
+  if (url && url !== '#') window.open(url, '_blank');
+}
+
+function launchSubject(id) { state.selectedSubject = id; navigate('subjects'); }
+
+// ═══════════════════════════════════════════
+// RESOURCES
+// ═══════════════════════════════════════════
+function renderResources() {
+  const totalRes = SUBJECTS.reduce((a,s)=>a+s.resources.length,0);
+  const doneRes = Object.values(state.completedResources).filter(Boolean).length;
+  return `<div style="max-width:900px">
+    <h1 class="section-title">Linked Resources</h1>
+    <p class="section-sub">All learning resources · ${doneRes}/${totalRes} reviewed</p>
+    ${SUBJECTS.map(s=>`<div class="card mb-16">
+      <div class="flex items-center gap-10 mb-14">
+        <span style="font-size:22px">${s.icon}</span>
+        <h3 style="font-size:16px;font-weight:600;flex:1">${s.name}</h3>
+        <span class="badge badge-accent">${s.resources.filter((_,i)=>state.completedResources[s.id+'_res_'+i]).length}/${s.resources.length}</span>
+      </div>
+      ${s.resources.map((r,i)=>{
+        const key=s.id+'_res_'+i; const done=state.completedResources[key];
+        return `<div class="resource-item" onclick="toggleResource('${key}','${r.url}')">
+          <div style="width:36px;height:36px;border-radius:8px;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${r.icon}</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:500">${r.name}</div>
+          <div style="font-size:12px;color:var(--muted)">${r.type}</div></div>
+          <div class="resource-check ${done?'done':'pending'}">${done?'✓':'→'}</div>
+        </div>`;
+      }).join('')}
+    </div>`).join('')}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// WORKSHEETS
+// ═══════════════════════════════════════════
+function renderWorksheets() {
+  return `<div style="max-width:900px">
+    <h1 class="section-title">Worksheets</h1>
+    <p class="section-sub">Practice quizzes by subject — scores save to Supabase automatically</p>
+    <div class="grid-2" style="gap:16px">
+    ${SUBJECTS.map(s=>{
+      const bank=(BASE_QUESTIONS[s.id]||[]);
+      const extra=(state.questionBank[s.id]||[]);
+      const total=bank.length+extra.length;
+      const attempts=state.quizHistory.filter(q=>q.sid===s.id).length;
+      const qs=state.quizHistory.filter(q=>q.sid===s.id);
+      const avg=qs.length?Math.round(qs.reduce((a,q)=>a+q.pct,0)/qs.length):0;
+      return `<div class="card card-sm">
+        <div class="flex items-center gap-12">
+          <span style="font-size:28px">${s.icon}</span>
+          <div style="flex:1"><div style="font-size:15px;font-weight:600">${s.name}</div>
+          <div style="font-size:12px;color:var(--muted)">${total} questions · ${attempts} attempts</div></div>
+          ${avg>0?`<span class="badge ${avg>=80?'badge-green':avg>=60?'badge-amber':'badge-red'}">Avg ${avg}%</span>`:'<span class="badge badge-blue">New</span>'}
+        </div>
+        <div class="prog-bar mt-10"><div class="prog-fill" style="width:${avg}%"></div></div>
+        <div class="flex mt-10" style="gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="startSubjectQuiz('${s.id}')">📝 Start Worksheet</button>
+          <button class="btn btn-outline btn-sm" onclick="state.page='generate';renderPage()">✨ Generate More</button>
+        </div>
+      </div>`;
+    }).join('')}
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// GENERATE
+// ═══════════════════════════════════════════
+function renderGenerate() {
+  return `<div style="max-width:700px">
+    <h1 class="section-title">Generate Quiz with AI</h1>
+    <p class="section-sub">Create custom worksheets powered by Claude AI · Questions save to your question bank</p>
+    <div class="card">
+      <div style="margin-bottom:16px">
+        <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px">Subject</label>
+        <select id="genSubject" class="input">${SUBJECTS.map(s=>`<option value="${s.id}">${s.icon} ${s.name}</option>`).join('')}</select>
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px">Topic / Focus area</label>
+        <input id="genTopic" class="input" placeholder="e.g. Linear equations, Photosynthesis, MLA citations…"/>
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px">Difficulty</label>
+        <select id="genDiff" class="input">
+          <option value="easy">Easy — foundational recall</option>
+          <option value="medium" selected>Medium — standard Grade 9</option>
+          <option value="hard">Hard — STAAR exam level</option>
+        </select>
+      </div>
+      <div style="margin-bottom:20px">
+        <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px">Number of questions</label>
+        <select id="genCount" class="input">
+          <option value="3">3 questions (quick)</option>
+          <option value="5" selected>5 questions (standard)</option>
+          <option value="8">8 questions (full worksheet)</option>
+          <option value="10">10 questions (exam mode)</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="generateAIQuiz()">✨ Generate with AI</button>
+    </div>
+    <div id="genStatus" style="margin-top:16px"></div>
+  </div>`;
+}
+
+async function generateAIQuiz() {
+  const subId = document.getElementById('genSubject').value;
+  const topic = document.getElementById('genTopic').value || 'general topics';
+  const diff = document.getElementById('genDiff').value;
+  const count = parseInt(document.getElementById('genCount').value);
+  const sub = SUBJECTS.find(s=>s.id===subId);
+  const statusEl = document.getElementById('genStatus');
+
+  statusEl.innerHTML = `<div class="card" style="text-align:center;padding:28px">
+    <div class="spinner"></div>
+    <p style="color:var(--muted);margin-top:8px;font-size:14px">Generating ${count} ${diff} questions on "${topic}" for ${sub.name}…</p>
+  </div>`;
+
+  const prompt = `You are a Texas TEKS Grade 9 teacher. Create exactly ${count} multiple-choice questions about "${topic}" for ${sub.name} (${sub.teks}).
+Difficulty: ${diff === 'easy' ? 'foundational recall' : diff === 'medium' ? 'standard Grade 9 application' : 'STAAR-level critical thinking'}.
+Respond ONLY with a valid JSON array, no markdown, no extra text:
+[{"q":"question","opts":["A","B","C","D"],"ans":0,"exp":"explanation"}]
+ans is the 0-based index of the correct answer. Make all options plausible.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await resp.json();
+    let text = data.content.map(c=>c.text||'').join('');
+    text = text.replace(/```json|```/g,'').trim();
+    const questions = JSON.parse(text);
+
+    // Save to question bank in Supabase
+    for (const q of questions) {
+      await sbInsert('ng_question_bank', {
+        subject_id: subId, topic, question: q.q, options: q.opts,
+        correct_index: q.ans, explanation: q.exp, difficulty: diff, generated: true
+      });
+      if (!state.questionBank[subId]) state.questionBank[subId] = [];
+      state.questionBank[subId].push({ ...q, _topic: topic, _generated: true });
+    }
+    saveLocal();
+
+    statusEl.innerHTML = `<div class="card" style="border-color:var(--green)">
+      <p style="color:var(--green);font-weight:500;margin-bottom:12px">✓ Generated ${questions.length} questions and saved to your bank!</p>
+      <button class="btn btn-primary" onclick="startCustomQuiz('${subId}',${count})">📝 Start This Quiz Now</button>
+      <button class="btn btn-outline mt-8" onclick="navigate('worksheets')">View all worksheets</button>
+    </div>`;
+    window._lastGenQuestions = questions;
+    window._lastGenSid = subId;
+  } catch(e) {
+    statusEl.innerHTML = `<div class="card" style="border-color:var(--red)">
+      <p style="color:var(--red);font-size:14px">⚠️ Generation failed: ${e.message}</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">The Anthropic API requires a valid API key with billing set up. This portal is using a proxy-free direct call.</p>
+    </div>`;
+  }
+}
+
+// ═══════════════════════════════════════════
+// QUIZ ENGINE
+// ═══════════════════════════════════════════
+function startSubjectQuiz(sid) {
+  const base = BASE_QUESTIONS[sid] || [];
+  const extra = state.questionBank[sid] || [];
+  const all = [...base, ...extra];
+  if (!all.length) { alert('No questions yet! Generate some first.'); return; }
+  const questions = shuffle(all).slice(0, Math.min(5, all.length));
+  openQuiz(sid, SUBJECTS.find(s=>s.id===sid)?.name || sid, questions);
+}
+
+function startCustomQuiz(sid, count) {
+  const qs = window._lastGenQuestions || [];
+  openQuiz(sid, SUBJECTS.find(s=>s.id===sid)?.name || sid, qs.slice(0, count));
+}
+
+function openQuiz(sid, topic, questions) {
+  state.activeQuiz = { sid, topic, questions, current: 0, answers: {} };
+  showModal('Quiz: ' + topic, renderQuizQuestion());
+}
+
+function renderQuizQuestion() {
+  const q = state.activeQuiz;
+  if (!q) return '';
+  const qi = q.current;
+  const ques = q.questions[qi];
+  const total = q.questions.length;
+  const answered = q.answers[qi];
+  return `<div>
+    <div class="flex items-center justify-between mb-16">
+      <span class="badge badge-accent">Question ${qi+1} of ${total}</span>
+      <div class="prog-bar" style="width:120px"><div class="prog-fill" style="width:${Math.round((qi+1)/total*100)}%"></div></div>
+    </div>
+    <p class="quiz-q">${ques.q}</p>
+    ${ques.opts.map((opt,i)=>{
+      let cls='quiz-opt';
+      if(answered!==undefined){
+        if(i===ques.ans) cls+=' correct';
+        else if(i===answered&&answered!==ques.ans) cls+=' wrong';
+      } else if(i===answered) cls+=' selected';
+      return `<div class="${cls}" onclick="${answered===undefined?`selectAnswer(${i})`:''}">
+        <div class="quiz-letter">${['A','B','C','D'][i]}</div><span>${opt}</span></div>`;
+    }).join('')}
+    ${answered!==undefined?`<div class="card mt-12" style="background:var(--surface2);border:none">
+      <p style="font-size:13px"><strong>${answered===ques.ans?'✓ Correct!':'✗ Incorrect.'}</strong> ${ques.exp}</p>
+    </div>`:''}
+    <div class="flex mt-16" style="justify-content:flex-end;gap:8px">
+      ${answered!==undefined&&qi<total-1?`<button class="btn btn-primary" onclick="nextQuestion()">Next →</button>`:''}
+      ${answered!==undefined&&qi===total-1?`<button class="btn btn-primary" onclick="finishQuiz()">See Results →</button>`:''}
+    </div>
+  </div>`;
+}
+
+function selectAnswer(i) {
+  if (!state.activeQuiz || state.activeQuiz.answers[state.activeQuiz.current] !== undefined) return;
+  state.activeQuiz.answers[state.activeQuiz.current] = i;
+  document.getElementById('modalBody').innerHTML = renderQuizQuestion();
+}
+
+function nextQuestion() { state.activeQuiz.current++; document.getElementById('modalBody').innerHTML = renderQuizQuestion(); }
+
+async function finishQuiz() {
+  const q = state.activeQuiz;
+  const correct = Object.keys(q.answers).filter(i=>q.answers[i]===q.questions[i].ans).length;
+  const total = q.questions.length;
+  const pct = Math.round(correct/total*100);
+  const xpGain = pct>=80?30:pct>=60?20:10;
+
+  const entry = { sid:q.sid, topic:q.topic, correct, total, pct,
+    date: new Date().toLocaleDateString(), ts: Date.now() };
+  state.quizHistory.push(entry);
+  awardXP(xpGain);
+
+  // Spaced repetition — schedule wrong answers
+  for (const [i, ques] of q.questions.entries()) {
+    if (q.answers[i] !== ques.ans) {
+      const dueAt = new Date(Date.now() + 86400000 * 2).toISOString();
+      const { data } = await sb.from('ng_spaced_review').insert({
+        student_id: STUDENT_ID, subject_id: q.sid, topic: q.topic,
+        question_data: ques, due_at: dueAt
+      }).select();
+      if (data?.[0]) {
+        state.spaceRepeat[data[0].id] = {
+          id: data[0].id, sid: q.sid, topic: q.topic, ques, due: new Date(dueAt).getTime()
+        };
+      }
+    }
+  }
+
+  // Save quiz to Supabase
+  await sbInsert('ng_quiz_history', {
+    subject_id: q.sid, topic: q.topic, correct, total, pct,
+    quiz_date: new Date().toISOString().split('T')[0]
+  });
+  checkAchievements();
+  await saveStats();
+  saveLocal();
+
+  const color = pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
+  const msg = pct>=80?'Excellent work! 🎉':pct>=60?'Good effort! Keep practicing 💪':'Keep reviewing — you\'ve got this! 📚';
+
+  document.getElementById('modalBody').innerHTML = `
+    <div style="text-align:center;padding:20px 0">
+      <div class="score-ring" style="border-color:${color}">
+        <div class="score-pct" style="color:${color}">${pct}%</div>
+        <div style="font-size:11px;color:var(--muted)">${correct}/${total}</div>
+      </div>
+      <h3 style="font-size:18px;margin-bottom:6px">${msg}</h3>
+      <p class="text-muted text-sm">+${xpGain} XP · Saved to Supabase ☁️</p>
+      <div class="flex mt-20" style="justify-content:center;gap:10px">
+        <button class="btn btn-outline" onclick="closeModal();renderPage()">Close</button>
+        <button class="btn btn-primary" onclick="closeModal();navigate('generate')">✨ Generate more</button>
+      </div>
+    </div>
+    <div style="margin-top:20px">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">Answer Review</h3>
+      ${q.questions.map((ques,i)=>`
+        <div style="padding:12px;border-left:3px solid ${q.answers[i]===ques.ans?'var(--green)':'var(--red)'};
+          background:${q.answers[i]===ques.ans?'var(--green-soft)':'var(--red-soft)'};border-radius:0 8px 8px 0;margin-bottom:8px">
+          <p style="font-size:13px;font-weight:500">${ques.q}</p>
+          <p style="font-size:12px;color:var(--muted);margin-top:4px">Your answer: ${ques.opts[q.answers[i]]||'—'} ${q.answers[i]===ques.ans?'✓':'✗'}</p>
+          ${q.answers[i]!==ques.ans?`<p style="font-size:12px;color:var(--green);margin-top:2px">Correct: ${ques.opts[ques.ans]}</p>`:''}
+          <p style="font-size:12px;color:#555;margin-top:4px">${ques.exp}</p>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+// SPACED REPETITION
+// ═══════════════════════════════════════════
+function getSpacedDue() {
+  const now = Date.now();
+  return Object.values(state.spaceRepeat).filter(s=>s.due<=now);
+}
+
+function renderSpaced() {
+  const due = getSpacedDue();
+  return `<div style="max-width:700px">
+    <h1 class="section-title">Spaced Review</h1>
+    <p class="section-sub">Questions from past quizzes scheduled for memory reinforcement</p>
+    ${due.length===0?`<div class="card" style="text-align:center;padding:40px">
+      <p style="font-size:36px;margin-bottom:10px">🎯</p>
+      <h3 style="font-size:18px;margin-bottom:6px">All caught up!</h3>
+      <p class="text-muted">No reviews due. Keep taking quizzes to build your review queue.</p>
+    </div>`:
+    `<div class="card mb-16">
+      <p style="font-size:14px;margin-bottom:14px">You have <strong>${due.length} question${due.length>1?'s':''}</strong> due for review.</p>
+      <button class="btn btn-primary" onclick="startSpacedSession()">🔄 Start Review Session</button>
+    </div>
+    ${due.map(d=>`<div class="card card-sm mb-8">
+      <span class="badge badge-amber mb-8">Review due</span>
+      <p style="font-size:14px">${d.ques.q}</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:4px">${SUBJECTS.find(s=>s.id===d.sid)?.name||d.sid} · ${d.topic}</p>
+    </div>`).join('')}`}
+  </div>`;
+}
+
+async function startSpacedSession() {
+  const due = getSpacedDue();
+  if (!due.length) return;
+  // Dismiss them in Supabase after session
+  openQuiz(due[0].sid, 'Spaced Review', due.map(d=>d.ques));
+}
+
+// ═══════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════
+function renderProgress() {
+  return `<div style="max-width:900px">
+    <h1 class="section-title">My Progress</h1>
+    <p class="section-sub">Your full learning journey — synced across devices</p>
+    <div class="grid-4 mb-20">
+      <div class="stat"><div class="stat-val">${state.xp}</div><div class="stat-lbl">Total XP</div></div>
+      <div class="stat"><div class="stat-val">${state.quizHistory.length}</div><div class="stat-lbl">Quizzes taken</div></div>
+      <div class="stat"><div class="stat-val">${Object.values(state.completedTopics).filter(Boolean).length}</div><div class="stat-lbl">Topics done</div></div>
+      <div class="stat"><div class="stat-val">${Object.values(state.completedResources).filter(Boolean).length}</div><div class="stat-lbl">Resources reviewed</div></div>
+    </div>
+    ${SUBJECTS.map(s=>{
+      const total=s.units.reduce((a,u)=>a+u.topics.length,0);
+      const done=s.units.reduce((a,u)=>a+u.topics.filter(t=>state.completedTopics[s.id+'_'+t]).length,0);
+      const qs=state.quizHistory.filter(q=>q.sid===s.id);
+      const avg=qs.length?Math.round(qs.reduce((a,q)=>a+q.pct,0)/qs.length):null;
+      const best=qs.length?Math.max(...qs.map(q=>q.pct)):null;
+      return `<div class="card mb-12">
+        <div class="flex items-center gap-12 mb-14">
+          <span style="font-size:24px">${s.icon}</span>
+          <h3 style="font-size:16px;font-weight:600;flex:1">${s.name}</h3>
+          ${avg!==null?`<span class="badge ${avg>=80?'badge-green':avg>=60?'badge-amber':'badge-red'}">Avg ${avg}%</span>`:'<span class="badge badge-blue">No quizzes yet</span>'}
+        </div>
+        <div class="grid-3">
+          <div><p style="font-size:12px;color:var(--muted);margin-bottom:4px">Topics complete</p>
+            <p style="font-size:18px;font-weight:600;color:var(--accent)">${done}/${total}</p>
+            <div class="prog-bar mt-4"><div class="prog-fill" style="width:${total>0?Math.round(done/total*100):0}%"></div></div></div>
+          <div><p style="font-size:12px;color:var(--muted);margin-bottom:4px">Quizzes taken</p>
+            <p style="font-size:18px;font-weight:600">${qs.length}</p></div>
+          <div><p style="font-size:12px;color:var(--muted);margin-bottom:4px">Best score</p>
+            <p style="font-size:18px;font-weight:600;color:var(--green)">${best!==null?best+'%':'—'}</p></div>
+        </div>
+        <button class="btn btn-outline btn-sm mt-12" onclick="startSubjectQuiz('${s.id}')">Practice ${s.name} →</button>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════════════
+function renderHistory() {
+  const hist = [...state.quizHistory].reverse();
+  return `<div style="max-width:800px">
+    <h1 class="section-title">Quiz History</h1>
+    <p class="section-sub">${hist.length} quizzes recorded · All saved in Supabase</p>
+    ${hist.length===0?`<div class="card" style="text-align:center;padding:40px">
+      <p style="font-size:36px;margin-bottom:10px">📋</p>
+      <p class="text-muted">No quizzes yet. Head to Worksheets to get started!</p>
+    </div>`:`<div class="card">
+      ${hist.map(q=>{
+        const sub=SUBJECTS.find(s=>s.id===q.sid);
+        return `<div class="log-row">
+          <span style="font-size:20px">${sub?.icon||'📝'}</span>
+          <div style="flex:1"><div style="font-size:14px;font-weight:500">${q.topic}</div>
+          <div style="font-size:12px;color:var(--muted)">${sub?.name||q.sid} · ${q.correct}/${q.total} correct</div></div>
+          <span class="badge ${q.pct>=80?'badge-green':q.pct>=60?'badge-amber':'badge-red'}">${q.pct}%</span>
+          <div style="font-size:12px;color:var(--soft);width:80px;text-align:right">${q.date}</div>
+        </div>`;
+      }).join('')}
+    </div>`}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// ACHIEVEMENTS
+// ═══════════════════════════════════════════
+const ALL_ACHIEVEMENTS = [
+  {id:'first_quiz',icon:'🎯',name:'First Quiz',desc:'Complete your first quiz',check:()=>state.quizHistory.length>=1},
+  {id:'perfect_score',icon:'💯',name:'Perfect Score',desc:'Score 100% on a quiz',check:()=>state.quizHistory.some(q=>q.pct===100)},
+  {id:'streak_3',icon:'🔥',name:'On Fire',desc:'3-day study streak',check:()=>state.streak>=3},
+  {id:'streak_7',icon:'⚡',name:'Streak Master',desc:'7-day study streak',check:()=>state.streak>=7},
+  {id:'topic_10',icon:'📖',name:'Topic Hunter',desc:'Complete 10 topics',check:()=>Object.values(state.completedTopics).filter(Boolean).length>=10},
+  {id:'quiz_10',icon:'📝',name:'Quiz Warrior',desc:'Take 10 quizzes',check:()=>state.quizHistory.length>=10},
+  {id:'xp_100',icon:'⭐',name:'XP Collector',desc:'Earn 100 XP',check:()=>state.xp>=100},
+  {id:'resource_5',icon:'🔗',name:'Resource Explorer',desc:'Review 5 resources',check:()=>Object.values(state.completedResources).filter(Boolean).length>=5},
+  {id:'all_subjects',icon:'🌟',name:'All-Rounder',desc:'Take a quiz in every subject',check:()=>SUBJECTS.every(s=>state.quizHistory.some(q=>q.sid===s.id))},
+  {id:'curriculum_complete',icon:'🎓',name:'Curriculum Complete',desc:'Complete all topics',check:()=>Object.values(state.completedTopics).filter(Boolean).length>=SUBJECTS.reduce((a,s)=>a+s.units.reduce((b,u)=>b+u.topics.length,0),0)}
+];
+
+function checkAchievements() {
+  let newEarned = false;
+  ALL_ACHIEVEMENTS.forEach(a=>{
+    if(!state.achievements.includes(a.id)&&a.check()){
+      state.achievements.push(a.id); awardXP(50); newEarned = true;
+    }
+  });
+  return newEarned;
+}
+
+function renderAchievements() {
+  return `<div style="max-width:800px">
+    <h1 class="section-title">Achievements</h1>
+    <p class="section-sub">${state.achievements.length}/${ALL_ACHIEVEMENTS.length} earned</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px">
+    ${ALL_ACHIEVEMENTS.map(a=>{
+      const earned=state.achievements.includes(a.id);
+      return `<div class="achievement ${earned?'earned':''}" style="${!earned?'opacity:0.4':''}">
+        <div class="achievement-icon">${earned?a.icon:'🔒'}</div>
+        <div class="achievement-name">${a.name}</div>
+        <div class="achievement-desc">${a.desc}</div>
+        ${earned?'<span class="badge badge-green" style="font-size:10px">Earned ✓</span>':''}
+      </div>`;
+    }).join('')}
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════
+function renderSettings() {
+  return `<div style="max-width:600px">
+    <h1 class="section-title">Settings</h1>
+    <p class="section-sub">Portal configuration</p>
+    <div class="card mb-16">
+      <h3 style="font-size:16px;font-weight:600;margin-bottom:12px">☁️ Supabase Connection</h3>
+      <div style="padding:12px;background:var(--green-soft);border-radius:8px;font-size:13px;color:var(--green)">
+        ✓ Connected to Supabase · Project: mhyavhkgsrkfklirjvhg<br/>
+        All progress, quiz scores, and question bank sync automatically across devices.
+      </div>
+    </div>
+    <div class="card mb-16">
+      <h3 style="font-size:16px;font-weight:600;margin-bottom:12px">🎓 Student Profile</h3>
+      <p style="font-size:14px">Name: <strong>Nandini Garg</strong></p>
+      <p style="font-size:14px;margin-top:8px">Grade: <strong>9th Grade — Texas TEKS</strong></p>
+      <p style="font-size:14px;margin-top:8px">Subjects: <strong>${SUBJECTS.length} subjects</strong></p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:16px;font-weight:600;margin-bottom:8px">⚠️ Reset Data</h3>
+      <p class="text-muted text-sm mb-12">This will delete all local cache. Supabase data remains intact.</p>
+      <button class="btn btn-danger" onclick="resetLocal()">Clear local cache</button>
+    </div>
+  </div>`;
+}
+
+function resetLocal() {
+  if (confirm('Clear local cache? Supabase data is safe — portal will reload from Supabase.')) {
+    localStorage.removeItem('ng_portal_v3'); location.reload();
+  }
+}
+
+// ═══════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════
+function showModal(title, body) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modalOverlay').style.display = 'flex';
+}
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalOverlay')) return;
+  document.getElementById('modalOverlay').style.display = 'none';
+  state.activeQuiz = null;
+}
+
+// ═══════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════
+function awardXP(amount) { state.xp += amount; renderSidebar(); }
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i=a.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+renderSidebar();
+renderPage(); // show loading state immediately
+loadFromSupabase(); // then load real data
+</script>
+</body>
+</html>
