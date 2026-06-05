@@ -123,6 +123,19 @@ h1,h2,h3{font-family:'Playfair Display',serif}
 .flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-8{gap:8px}.gap-12{gap:12px}.flex-1{flex:1}
 .text-sm{font-size:13px}.text-muted{color:var(--muted)}.text-green{color:var(--green)}.text-accent{color:var(--accent)}
 select{font-family:'DM Sans',sans-serif}
+
+/* Login screen */
+#loginScreen{position:fixed;inset:0;background:var(--ink);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:0}
+.login-box{background:var(--surface);border-radius:20px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.login-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.login-label{font-size:13px;font-weight:500;display:block;margin-bottom:6px;color:var(--ink)}
+.login-input{width:100%;padding:10px 14px;border:1.5px solid var(--border2);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--surface);outline:none;margin-bottom:16px;transition:border-color 0.15s}
+.login-input:focus{border-color:var(--accent)}
+.login-btn{width:100%;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s;margin-top:4px}
+.login-btn:hover{background:var(--accent2)}
+.login-error{font-size:13px;color:var(--red);background:var(--red-soft);padding:8px 12px;border-radius:6px;margin-bottom:14px;display:none}
+.login-welcome{font-size:13px;color:var(--muted);text-align:center;margin-top:16px}
 </style>
 </head>
 <body>
@@ -1332,5 +1345,20 @@ renderSidebar();
 renderPage(); // show loading state immediately
 loadFromSupabase(); // then load real data
 </script>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">📚 StudyPortal</div>
+    <div class="login-sub">Nandini Garg &middot; Grade 9 &middot; Texas TEKS</div>
+    <div class="login-error" id="loginError">Incorrect username or password.</div>
+    <label class="login-label">Username</label>
+    <input class="login-input" id="loginUser" type="text" placeholder="Enter username" autocomplete="username"/>
+    <label class="login-label">Password</label>
+    <input class="login-input" id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password"/>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-welcome">Welcome back, Nandini! 👋</div>
+  </div>
+</div>
+
 </body>
 </html>
