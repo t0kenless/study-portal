@@ -186,6 +186,40 @@ select{font-family:'DM Sans',sans-serif}
 </div>
 
 <script>
+
+// =======================================
+// LOGIN
+// =======================================
+const USERS = { 'nandini': '0707dogs!!' };
+
+function checkLogin() {
+  if (sessionStorage.getItem('ng_auth') === '1') {
+    document.getElementById('loginScreen').style.display = 'none';
+  }
+}
+
+function doLogin() {
+  const user = document.getElementById('loginUser').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass').value;
+  const err  = document.getElementById('loginError');
+  if (USERS[user] && USERS[user] === pass) {
+    sessionStorage.setItem('ng_auth', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+  } else {
+    err.style.display = 'block';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  checkLogin();
+  document.addEventListener('keydown', function(e) {
+    var ls = document.getElementById('loginScreen');
+    if (e.key === 'Enter' && ls && ls.style.display !== 'none') doLogin();
+  });
+});
+
 // ═══════════════════════════════════════════
 // SUPABASE CONFIG
 // ═══════════════════════════════════════════
