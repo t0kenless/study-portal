@@ -958,6 +958,10 @@ ans is the 0-based index of the correct answer. Make all options plausible.`;
         messages: [{ role: 'user', content: prompt }] })
     });
     const data = await resp.json();
+    // Handle both direct API response and proxy response formats
+    if (!data.content) {
+      throw new Error('API error: ' + JSON.stringify(data).substring(0,200));
+    }
     let text = data.content.map(c=>c.text||'').join('');
     text = text.replace(/```json|```/g,'').trim();
     const questions = JSON.parse(text);
