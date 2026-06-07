@@ -928,32 +928,61 @@ function renderResources() {
 // WORKSHEETS
 // ═══════════════════════════════════════════
 function renderWorksheets() {
-  return `<div style="max-width:900px">
+  mergePreloadedQuestions();
+  // Group worksheets by semester
+  const geoA = WORKSHEET_INDEX.filter(w => w.label.includes('Geo A'));
+  const geoB = WORKSHEET_INDEX.filter(w => w.label.includes('Geo B'));
+  const other = WORKSHEET_INDEX.filter(w => !w.label.includes('Geo A') && !w.label.includes('Geo B'));
+
+  function wsCard(ws) {
+    const allQs = (BASE_QUESTIONS[ws.sid] || []).filter(q => q._worksheet === ws.label);
+    const count = allQs.length;
+    const attempts = state.quizHistory.filter(q => q.topic === ws.label).length;
+    const scores = state.quizHistory.filter(q => q.topic === ws.label);
+    const avg = scores.length ? Math.round(scores.reduce((a,q) => a+q.pct, 0) / scores.length) : 0;
+    const badge = avg > 0
+      ? `<span class="badge ${avg>=80?'badge-green':avg>=60?'badge-amber':'badge-red'}">${avg}%</span>`
+      : `<span class="badge badge-blue">New</span>`;
+    const topicShort = ws.label.replace('Geo A - WS','A').replace('Geo B - WS','B').replace('Geo A+B -','').replace('WS','').trim();
+    return `<div class="card card-sm" style="padding:14px">
+      <div class="flex items-center gap-10" style="margin-bottom:8px">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:var(--ink)">${ws.label.replace('Geo A - ','').replace('Geo B - ','').replace('Geo A+B - ','')}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${count} questions · ${attempts} attempts</div>
+        </div>
+        ${badge}
+      </div>
+      ${avg > 0 ? `<div class="prog-bar" style="margin-bottom:8px"><div class="prog-fill" style="width:${avg}%"></div></div>` : ''}
+      <button class="btn btn-primary btn-sm" style="width:100%" onclick="startWorksheet('${ws.id}')">
+        📝 Start (${Math.min(count, 20)} questions)
+      </button>
+    </div>`;
+  }
+
+  const sectionStyle = 'margin-bottom:28px';
+  const gridStyle = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px';
+
+  return `<div style="max-width:960px">
     <h1 class="section-title">Worksheets</h1>
-    <p class="section-sub">Practice quizzes by subject -- scores save to Supabase automatically</p>
-    <div class="grid-2" style="gap:16px">
-    ${SUBJECTS.map(s=>{
-      const bank=(BASE_QUESTIONS[s.id]||[]);
-      const extra=(state.questionBank[s.id]||[]);
-      const total=bank.length+extra.length;
-      const attempts=state.quizHistory.filter(q=>q.sid===s.id).length;
-      const qs=state.quizHistory.filter(q=>q.sid===s.id);
-      const avg=qs.length?Math.round(qs.reduce((a,q)=>a+q.pct,0)/qs.length):0;
-      return `<div class="card card-sm">
-        <div class="flex items-center gap-12">
-          <span style="font-size:28px">${s.icon}</span>
-          <div style="flex:1"><div style="font-size:15px;font-weight:600">${s.name}</div>
-          <div style="font-size:12px;color:var(--muted)">${total} questions  -  ${attempts} attempts</div></div>
-          ${avg>0?`<span class="badge ${avg>=80?'badge-green':avg>=60?'badge-amber':'badge-red'}">Avg ${avg}%</span>`:'<span class="badge badge-blue">New</span>'}
-        </div>
-        <div class="prog-bar mt-10"><div class="prog-fill" style="width:${avg}%"></div></div>
-        <div class="flex mt-10" style="gap:8px">
-          <button class="btn btn-primary btn-sm" onclick="startSubjectQuiz('${s.id}')">📝 Start Worksheet</button>
-          <button class="btn btn-outline btn-sm" onclick="state.page='generate';renderPage()">✨ Generate More</button>
-        </div>
-      </div>`;
-    }).join('')}
-    </div>
+    <p class="section-sub">17 worksheets · 350 questions · scores sync automatically</p>
+
+    ${geoA.length ? `
+    <h2 style="font-size:16px;font-weight:700;margin:20px 0 10px;color:var(--ink)">📐 Geometry A</h2>
+    <div style="${gridStyle};${sectionStyle}">
+      ${geoA.map(wsCard).join('')}
+    </div>` : ''}
+
+    ${geoB.length ? `
+    <h2 style="font-size:16px;font-weight:700;margin:20px 0 10px;color:var(--ink)">📊 Geometry B</h2>
+    <div style="${gridStyle};${sectionStyle}">
+      ${geoB.map(wsCard).join('')}
+    </div>` : ''}
+
+    ${other.length ? `
+    <h2 style="font-size:16px;font-weight:700;margin:20px 0 10px;color:var(--ink)">🎯 Mixed & Visual</h2>
+    <div style="${gridStyle};${sectionStyle}">
+      ${other.map(wsCard).join('')}
+    </div>` : ''}
   </div>`;
 }
 
@@ -1065,8 +1094,20 @@ function startSubjectQuiz(sid) {
   const extra = state.questionBank[sid] || [];
   const all = [...base, ...extra];
   if (!all.length) { alert('No questions yet! Generate some first.'); return; }
-  const questions = shuffle(all).slice(0, Math.min(5, all.length));
+  const questions = shuffle(all).slice(0, Math.min(20, all.length));
   openQuiz(sid, SUBJECTS.find(s=>s.id===sid)?.name || sid, questions);
+}
+
+
+function startWorksheet(wsId) {
+  mergePreloadedQuestions();
+  const ws = WORKSHEET_INDEX.find(w => w.id === wsId);
+  if (!ws) { alert('Worksheet not found'); return; }
+  const allQs = (BASE_QUESTIONS[ws.sid] || []).filter(q => q._worksheet === ws.label);
+  if (!allQs.length) { alert('No questions for this worksheet yet.'); return; }
+  // Take up to 20 questions — use all if <= 20, else shuffle and take 20
+  const questions = allQs.length <= 20 ? [...allQs] : shuffle([...allQs]).slice(0, 20);
+  openQuiz(ws.sid, ws.label, questions);
 }
 
 function startCustomQuiz(sid, count) {
