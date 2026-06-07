@@ -533,11 +533,8 @@ const WORKSHEET_INDEX = [{"id": "geoA_ws1", "label": "Geo A - WS 1: Coordinate G
 
 function mergePreloadedQuestions() {
   for (const [sid, qs] of Object.entries(PRELOADED_QUESTIONS)) {
-    if (!BASE_QUESTIONS[sid]) BASE_QUESTIONS[sid] = [];
-    const existing = new Set(BASE_QUESTIONS[sid].map(q => q.q));
-    for (const q of qs) {
-      if (!existing.has(q.q)) BASE_QUESTIONS[sid].push(q);
-    }
+    // Replace entirely with preloaded (which is the authoritative full set)
+    BASE_QUESTIONS[sid] = [...qs];
   }
 }
 
@@ -935,7 +932,7 @@ function renderWorksheets() {
   const other = WORKSHEET_INDEX.filter(w => !w.label.includes('Geo A') && !w.label.includes('Geo B'));
 
   function wsCard(ws) {
-    const allQs = (BASE_QUESTIONS[ws.sid] || []).filter(q => q._worksheet === ws.label);
+    const allQs = (BASE_QUESTIONS[ws.sid] || []).filter(q => q._worksheet === ws.label || q._wsId === ws.id);
     const count = allQs.length;
     const attempts = state.quizHistory.filter(q => q.topic === ws.label).length;
     const scores = state.quizHistory.filter(q => q.topic === ws.label);
@@ -1103,7 +1100,7 @@ function startWorksheet(wsId) {
   mergePreloadedQuestions();
   const ws = WORKSHEET_INDEX.find(w => w.id === wsId);
   if (!ws) { alert('Worksheet not found'); return; }
-  const allQs = (BASE_QUESTIONS[ws.sid] || []).filter(q => q._worksheet === ws.label);
+  const allQs = (BASE_QUESTIONS[ws.sid] || []).filter(q => q._worksheet === ws.label || q._wsId === ws.id);
   if (!allQs.length) { alert('No questions for this worksheet yet.'); return; }
   // Take up to 20 questions — use all if <= 20, else shuffle and take 20
   const questions = allQs.length <= 20 ? [...allQs] : shuffle([...allQs]).slice(0, 20);
